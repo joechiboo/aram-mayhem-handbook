@@ -62,7 +62,7 @@ section{display:flex;flex-direction:column;gap:16px}
 .chip[aria-pressed="true"]{background:var(--hex);border-color:var(--hex);color:var(--bg);font-weight:500}
 .opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:.86rem}
 .opts select{font:inherit;padding:3px 6px;background:var(--bg);color:var(--ink);border:1px solid var(--line)}
-.count{margin-left:auto;color:var(--muted)}
+.count{margin-left:10px;color:var(--muted)}
 
 /* list */
 ul.list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
@@ -100,7 +100,7 @@ ul.list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .champinfo b{color:var(--ink)}
 .row.pk{background:var(--surface);box-shadow:inset 3px 0 0 var(--accent)}
 .row.pk .rk{color:var(--accent);font-weight:700}
-.tag.pick{border-color:var(--accent);color:var(--accent);font-weight:500}
+.tag.top{border-color:var(--accent);color:var(--accent);font-weight:500}
 .wr .all{font-size:.72rem;color:var(--muted)}
 @media (max-width:700px){
   .row{grid-template-columns:minmax(0,1fr) 6.2rem;padding:12px 0}
@@ -108,8 +108,19 @@ ul.list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
   .nm{grid-column:1;grid-row:1}
   .wr{grid-column:2;grid-row:1;align-self:start}
   .meta{grid-column:1;grid-row:2}
-  .pin{grid-column:2;grid-row:2}
+  .pin{grid-column:2;grid-row:2;padding:9px 0}
+  .row.pk{padding-left:12px;padding-right:8px}
+  .chip{padding:7px 13px}
+  .tray{padding-top:8px}
+  .tray-in{gap:6px}
+  .tray h3{flex-basis:100%;font-size:.78rem}
+  .pick{padding:3px 8px;gap:6px;font-size:.88rem}
+  header{gap:6px;padding-bottom:12px}
+  .lede{font-size:.9rem}
 }
+details.filt{display:flex;flex-direction:column;gap:10px}
+details.filt>summary{cursor:pointer;font-size:.86rem;color:var(--hex);padding:4px 0}
+details.filt>.in{display:flex;flex-direction:column;gap:10px;margin-top:8px}
 
 /* tray */
 .tray{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:2px solid var(--accent);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));z-index:5}
@@ -184,14 +195,18 @@ footer ul{margin:0;padding-left:1.2em}
     </div>
     <p class="champinfo" id="champInfo" hidden></p>
     <input type="search" id="q" placeholder="輸入增幅名稱，中英文皆可（例：巨人殺手、Eureka）" autocomplete="off" aria-label="搜尋增幅">
-    <div class="chiprow" id="roles"><span class="lbl">我玩的是</span></div>
-    <div class="chiprow" id="rars"><span class="lbl">稀有度</span></div>
-    <div class="chiprow" id="tiers"><span class="lbl">梯隊</span></div>
-    <div class="opts">
-      <label>排序 <select id="sort"><option value="wr">勝率高到低</option><option value="pr">選取率高到低</option></select></label>
-      <label><input type="checkbox" id="hideGone"> 隱藏 4.0 預計移除的增幅</label>
-      <span class="count" id="count"></span>
-    </div>
+    <details class="filt" id="filt">
+      <summary>篩選與排序 <span class="count" id="count"></span></summary>
+      <div class="in">
+        <div class="chiprow" id="roles"><span class="lbl">我玩的是</span></div>
+        <div class="chiprow" id="rars"><span class="lbl">稀有度</span></div>
+        <div class="chiprow" id="tiers"><span class="lbl">梯隊</span></div>
+        <div class="opts">
+          <label>排序 <select id="sort"><option value="wr">勝率高到低</option><option value="pr">選取率高到低</option></select></label>
+          <label><input type="checkbox" id="hideGone"> 隱藏 4.0 預計移除的增幅</label>
+        </div>
+      </div>
+    </details>
   </div>
   <p class="small muted">用法：先選英雄，該英雄收益最高的 12 張會排到最前面並顯示專屬勝率；再把出現的三張各按一次「比較」，下方會排出順序。未選英雄時依全體勝率排序，可用定位篩選。勝率條以 50% 為中線。</p>
   <ul class="list" id="list"></ul>
@@ -759,7 +774,7 @@ function wrBar(v,all){
 }
 function rowHTML(a,n){
   const tags=[],p=pickOf(a);
-  if(p)tags.push(`<span class="tag pick">${esc(st.champ.zh)}首選 +${p.g.toFixed(1)}%</span>`);
+  if(p)tags.push(`<span class="tag top">${esc(st.champ.zh)}首選 +${p.g.toFixed(1)}%</span>`);
   if(a.roles.includes('U'))tags.push('<span class="tag">通用</span>');
   for(const k of a.roles)if(ROLE[k])tags.push(`<span class="tag">${ROLE[k]}</span>`);
   if(a.fx.includes('指定技能'))tags.push('<span class="tag">綁定技能</span>');
@@ -805,7 +820,7 @@ function renderTray(){
   const sc=a=>{const p=pickOf(a);return p?1000+p.g:a.wr};
   const ps=st.pins.map(i=>A[i]).sort((x,y)=>sc(y)-sc(x));
   $('#trayIn').innerHTML=`<h3>三選一比較${st.champ?'（'+esc(st.champ.zh)+'）':''}</h3>`+ps.map((a,i)=>{const p=pickOf(a);
-    return `<span class="pick${i===0&&ps.length>1?' best':''}">${i===0&&ps.length>1?'<span class="first">建議</span>':''}<b>${esc(a.zh)}</b><span class="num">${(p?p.cw:a.wr).toFixed(1)}%</span><span class="small muted">${p?'英雄首選 +'+p.g.toFixed(1)+'%':(st.champ?'全體勝率':RAR[a.r])}</span></span>`}).join('')+
+    return `<span class="pick${i===0&&ps.length>1?' best':''}">${i===0&&ps.length>1?'<span class="first">建議</span>':''}<b>${esc(a.zh)}</b><span class="num">${(p?p.cw:a.wr).toFixed(1)}%</span><span class="small muted">${p?'首選 +'+p.g.toFixed(1)+'%':(st.champ?'全體':RAR[a.r])}</span></span>`}).join('')+
     `<button class="clear" type="button" id="clr">清除</button>`;
   t.hidden=false;
   $('#clr').onclick=()=>{st.pins=[];renderTray();render()};
@@ -813,7 +828,9 @@ function renderTray(){
 $('#list').addEventListener('click',e=>{
   const b=e.target.closest('.pin');if(!b)return;
   const id=+b.dataset.id,i=st.pins.indexOf(id);
-  if(i>=0)st.pins.splice(i,1);else{if(st.pins.length>=3)st.pins.shift();st.pins.push(id)}
+  if(i>=0)st.pins.splice(i,1);else{if(st.pins.length>=3)st.pins.shift();st.pins.push(id);
+    // 以搜尋找到卡片並加入後，清空搜尋，方便接著找下一張
+    if(st.q){st.q='';$('#q').value='';if(st.pins.length<3)$('#q').focus()}}
   renderTray();render();
 });
 $('#q').addEventListener('input',e=>{st.q=e.target.value;render()});
@@ -880,6 +897,7 @@ function show(t,push){
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>show(b.dataset.t,true));
 window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
 show(location.hash.slice(1));
+$('#filt').open=window.matchMedia('(min-width:701px)').matches;
 try{const s=localStorage.getItem('champ');if(s&&CH[s]){st.champ=CH[s];$('#champ').value=CH[s].zh}}catch(e){}
 render();
 </script>
