@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+<meta name="theme-color" content="#0a1418">
+<title>海克斯選卡手冊（3.0 封存）</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<style>
+body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Layout: one working column. Lookup tool first, reading tabs behind it, compare tray docked at the bottom. */
+:root{
+  --bg:#edf2f1; --surface:#fafcfb; --sunk:#e2e9e8; --ink:#13232b; --muted:#566a70; --line:#cbd7d6;
+  --accent:#8f6410; --hex:#0d6c78;
+  --silver:#647682; --gold:#9c6f0c; --prism:#7d45c8;
+  --good:#1b7a55; --bad:#b03c2a;
+  --display:"Chakra Petch","Noto Sans TC",system-ui,sans-serif;
+  --body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0a1418; --surface:#111e24; --sunk:#0d181d; --ink:#e3eded; --muted:#8da2a7; --line:#22363d;
+  --accent:#dcab4c; --hex:#52c4d0;
+  --silver:#a8b7c1; --gold:#e2b344; --prism:#b98dff;
+  --good:#4fc48c; --bad:#f07a63; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0a1418; --surface:#111e24; --sunk:#0d181d; --ink:#e3eded; --muted:#8da2a7; --line:#22363d;
+  --accent:#dcab4c; --hex:#52c4d0;
+  --silver:#a8b7c1; --gold:#e2b344; --prism:#b98dff;
+  --good:#4fc48c; --bad:#f07a63; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.65}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px;padding-block:28px 120px;display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.25}
+h1{font-size:clamp(1.7rem,4.5vw,2.4rem);letter-spacing:.02em}
+h2{font-size:1.25rem}
+h3{font-size:1rem}
+p{margin:0}
+a{color:var(--hex)}
+.num{font-family:var(--display);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:.84rem}
+
+header{display:flex;flex-direction:column;gap:8px;border-bottom:2px solid var(--accent);padding-bottom:16px}
+.eyebrow{font-family:var(--display);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--hex)}
+.lede{max-width:62ch;color:var(--muted)}
+.stamp{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.84rem;color:var(--muted)}
+.stamp b{color:var(--ink);font-weight:500}
+
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tab{font:inherit;font-family:var(--display);font-weight:600;padding:8px 14px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;border-radius:2px}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--hex);outline-offset:2px}
+
+section{display:flex;flex-direction:column;gap:16px}
+
+/* controls */
+.controls{display:flex;flex-direction:column;gap:10px;background:var(--surface);border:1px solid var(--line);padding:14px}
+.controls input[type=search]{font:inherit;width:100%;padding:10px 12px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:2px}
+.chiprow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chiprow .lbl{font-size:.78rem;color:var(--muted);min-width:3.2em}
+.chip{font:inherit;font-size:.86rem;padding:4px 11px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;border-radius:99px}
+.chip[aria-pressed="true"]{background:var(--hex);border-color:var(--hex);color:var(--bg);font-weight:500}
+.opts{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:.86rem}
+.opts select{font:inherit;padding:3px 6px;background:var(--bg);color:var(--ink);border:1px solid var(--line)}
+.count{margin-left:10px;color:var(--muted)}
+
+/* list */
+ul.list{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:2.4rem minmax(0,1fr) 10.5rem 8.5rem 4.2rem;gap:4px 14px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line)}
+.row.gone{background:repeating-linear-gradient(135deg,transparent 0 10px,var(--sunk) 10px 20px)}
+.rk{font-family:var(--display);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+.nm{min-width:0}
+.nm b{font-weight:700;font-size:1rem}
+.nm .en{color:var(--muted);font-size:.78rem;margin-left:8px}
+.fx{color:var(--muted);font-size:.86rem;line-height:1.5}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:3px}
+.tag{font-size:.7rem;padding:0 6px;border:1px solid var(--line);color:var(--muted);border-radius:2px}
+.tag.warn{border-color:var(--bad);color:var(--bad)}
+.meta{display:flex;gap:8px;align-items:center}
+.pill{font-size:.76rem;width:3.4rem;text-align:center;padding:1px 0;border:1px solid currentColor;border-radius:2px}
+.r-P{color:var(--prism)} .r-G{color:var(--gold)} .r-S{color:var(--silver)} .r-X{color:var(--muted);border-style:dashed}
+.tier{font-family:var(--display);font-weight:700;width:1.7rem;height:1.7rem;display:grid;place-items:center;border-radius:2px;background:var(--sunk);color:var(--ink)}
+.t-S{background:var(--accent);color:var(--bg)} .t-A{background:var(--hex);color:var(--bg)}
+.t-D{background:var(--bad);color:var(--bg)}
+.pr{font-size:.8rem;color:var(--muted);white-space:nowrap}
+.wr{display:flex;flex-direction:column;gap:3px}
+.wr .num{font-weight:700;font-size:1.02rem}
+.wr .up{color:var(--good)} .wr .dn{color:var(--bad)}
+.bar{position:relative;height:5px;background:var(--sunk)}
+.bar::after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--muted)}
+.bar i{position:absolute;top:0;bottom:0}
+.bar i.up{background:var(--good)} .bar i.dn{background:var(--bad)}
+.pin{font:inherit;font-size:.82rem;padding:5px 0;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;border-radius:2px}
+.pin[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.empty{padding:28px 4px;color:var(--muted)}
+.champrow{display:flex;gap:8px;align-items:center}
+.champrow input{font:inherit;flex:1;min-width:0;padding:10px 12px;background:var(--bg);color:var(--ink);border:1px solid var(--accent);border-radius:2px}
+.champrow button{font:inherit;font-size:.86rem;padding:9px 12px;background:transparent;border:1px solid var(--line);color:var(--ink);cursor:pointer;border-radius:2px;white-space:nowrap}
+.champinfo{font-size:.88rem;color:var(--muted);border-left:3px solid var(--accent);padding-left:10px}
+.champinfo b{color:var(--ink)}
+.row.pk{background:var(--surface);box-shadow:inset 3px 0 0 var(--accent)}
+.row.pk .rk{color:var(--accent);font-weight:700}
+.tag.top{border-color:var(--accent);color:var(--accent);font-weight:500}
+.wr .all{font-size:.72rem;color:var(--muted)}
+@media (max-width:700px){
+  .row{grid-template-columns:minmax(0,1fr) 6.2rem;padding:12px 0}
+  .rk{display:none}
+  .nm{grid-column:1;grid-row:1}
+  .wr{grid-column:2;grid-row:1;align-self:start}
+  .meta{grid-column:1;grid-row:2}
+  .pin{grid-column:2;grid-row:2;padding:9px 0}
+  .row.pk{padding-left:12px;padding-right:8px}
+  .chip{padding:7px 13px}
+  .tray{padding-top:8px}
+  .tray-in{gap:6px}
+  .tray h3{flex-basis:100%;font-size:.78rem}
+  .pick{padding:3px 8px;gap:6px;font-size:.88rem}
+  header{gap:6px;padding-bottom:12px}
+  .lede{font-size:.9rem}
+}
+details.filt{display:flex;flex-direction:column;gap:10px}
+details.filt>summary{cursor:pointer;font-size:.86rem;color:var(--hex);padding:4px 0}
+details.filt>.in{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+
+/* tray */
+.tray{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:2px solid var(--accent);padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));z-index:5}
+.tray-in{max-width:1040px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.tray h3{font-size:.86rem;color:var(--muted);font-family:var(--body);font-weight:500}
+.pick{display:flex;gap:8px;align-items:baseline;padding:4px 10px;border:1px solid var(--line);border-radius:2px}
+.pick.best{border-color:var(--accent)}
+.pick .first{font-size:.7rem;color:var(--bg);background:var(--accent);padding:0 5px;border-radius:2px}
+.tray button.clear{font:inherit;font-size:.82rem;margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--ink);padding:4px 10px;cursor:pointer;border-radius:2px}
+
+/* reading tabs */
+.prose{max-width:68ch;display:flex;flex-direction:column;gap:10px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.rule{background:var(--surface);padding:16px;display:flex;flex-direction:column;gap:8px}
+.rule h3{color:var(--accent)}
+.rule p{font-size:.92rem}
+.ev{font-size:.84rem;color:var(--muted);border-left:2px solid var(--hex);padding-left:10px}
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--line);padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.mini{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.mini li{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+.mini li:last-child{border-bottom:0}
+.mini .num{white-space:nowrap}
+.note{background:var(--sunk);padding:12px 14px;font-size:.88rem;color:var(--muted);border-left:3px solid var(--accent)}
+
+.stage{display:grid;grid-template-columns:4.2rem minmax(0,1fr);gap:10px;align-items:center}
+.stack{display:flex;height:26px;border:1px solid var(--line)}
+.stack span{display:grid;place-items:center;font-family:var(--display);font-size:.78rem;color:var(--bg);overflow:hidden;white-space:nowrap}
+.s-S{background:var(--silver)} .s-G{background:var(--gold)} .s-P{background:var(--prism)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.84rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.9rem}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-weight:500;color:var(--muted);font-size:.8rem;white-space:nowrap}
+td.n{font-family:var(--display);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+th.n{text-align:right}
+.hi{color:var(--accent);font-weight:700}
+footer{border-top:1px solid var(--line);padding-top:14px;font-size:.84rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+footer ul{margin:0;padding-left:1.2em}
+@media (prefers-reduced-motion:no-preference){ .bar i{transition:width .25s ease,left .25s ease} }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <span class="eyebrow">ARAM Mayhem · 隨機單中：海克斯大亂鬥</span>
+  <h1>海克斯選卡手冊</h1>
+  <p class="note">這是 3.0（v16.20）的封存版，4.0 已於 2026-10-21 隨 26.21 上線，部分增幅已移除、數據不再適用。<a href="../../">回到最新版</a></p>
+  <p class="lede">三選一時查這裡。現行 3.0 的 211 個增幅依實戰勝率排序，選了英雄會依該英雄的相性重新排序，並整理選卡心法、稀有度機率與 4.0 前瞻。</p>
+  <div class="stamp">
+    <span>現行資料 <b>v16.20（3.0）</b></span>
+    <span>更新 <b>2026-10-12</b></span>
+    <span>樣本 <b class="num">1,329 萬</b> 場，全分段</span>
+    <span>封存於 <b>2026-10-28</b></span>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="章節">
+  <button class="tab" role="tab" id="tab-lookup" data-t="lookup">選卡查詢</button>
+  <button class="tab" role="tab" id="tab-tips" data-t="tips">選卡心法</button>
+  <button class="tab" role="tab" id="tab-odds" data-t="odds">稀有度機率</button>
+  <button class="tab" role="tab" id="tab-next" data-t="next">4.0 前瞻</button>
+</nav>
+
+<!-- ============ 查詢 ============ -->
+<section id="sec-lookup" role="tabpanel" aria-labelledby="tab-lookup">
+  <div class="controls">
+    <div class="champrow">
+      <input type="text" id="champ" list="champList" placeholder="先選這場的英雄（例：犽宿、艾希），清單會依該英雄重新排序" autocomplete="off" aria-label="選擇英雄">
+      <datalist id="champList"></datalist>
+      <button type="button" id="champClr">清除英雄</button>
+    </div>
+    <p class="champinfo" id="champInfo" hidden></p>
+    <input type="search" id="q" placeholder="輸入增幅名稱，中英文皆可（例：巨人殺手、Eureka）" autocomplete="off" aria-label="搜尋增幅">
+    <details class="filt" id="filt">
+      <summary>篩選與排序 <span class="count" id="count"></span></summary>
+      <div class="in">
+        <div class="chiprow" id="roles"><span class="lbl">我玩的是</span></div>
+        <div class="chiprow" id="rars"><span class="lbl">稀有度</span></div>
+        <div class="chiprow" id="tiers"><span class="lbl">梯隊</span></div>
+        <div class="opts">
+          <label>排序 <select id="sort"><option value="wr">勝率高到低</option><option value="pr">選取率高到低</option></select></label>
+          <label><input type="checkbox" id="hideGone"> 隱藏 4.0 預計移除的增幅</label>
+        </div>
+      </div>
+    </details>
+  </div>
+  <p class="small muted">用法：先選英雄，該英雄收益最高的 12 張會排到最前面並顯示專屬勝率；再把出現的三張各按一次「比較」，下方會排出順序。未選英雄時依全體勝率排序，可用定位篩選。勝率條以 50% 為中線。</p>
+  <ul class="list" id="list"></ul>
+</section>
+
+<!-- ============ 心法 ============ -->
+<section id="sec-tips" role="tabpanel" aria-labelledby="tab-tips" hidden>
+  <div class="prose">
+    <h2>選卡的七個判斷</h2>
+    <p class="muted">以下每一條都對得上現行版本的勝率資料。順序大致是對局中做決定的順序。</p>
+  </div>
+  <div class="rules">
+    <div class="rule"><h3>先問契合，再看稀有度</h3>
+      <p>稜鏡只代表上限高，契合才是強度。讓增幅吃到你英雄本來就在做的事：坦克要生命與控場收益、法師要急速與持續傷害、射手要射程與暴擊。</p>
+      <p class="ev" id="ev-prism"></p></div>
+    <div class="rule"><h3>熱門不等於強</h3>
+      <p>選取率最高的幾張，勝率多半只在 50% 上下。大家愛選的是「看起來通用」的卡，而通用往往代表平庸。</p>
+      <p class="ev">質變：稜鏡選取率 9.6% 居冠，勝率 50.7%；循環利用 8.0%，勝率 49.8%；寶石手套 5.7%，勝率 48.4%。</p></div>
+    <div class="rule"><h3>大絕類增幅普遍偏弱</h3>
+      <p>大絕冷卻長，綁在大絕上的效果一場團戰只觸發一次。真正強的反而是把大絕封印、換取基本技能強度的那張。</p>
+      <p class="ev">無法掌握 46.6%、無敵大絕 46.1%、終極革新 45.8%、殺戮時間 46.9%；基本功夫（封印大絕）53.5%。</p></div>
+    <div class="rule"><h3>雪球改造類別碰</h3>
+      <p>改造雪球的增幅整組落在後段。雪球本身命中率不穩，把一格增幅押在上面並不划算。</p>
+      <p class="ev">巨無霸雪球 48.5%、鯊魚風暴 47.9%、彈珠台 46.3%、神聖雪球 45.0%、雪爆 44.6%。</p></div>
+    <div class="rule"><h3>玩輔助就拿輔助卡</h3>
+      <p>治療護盾類增幅選取率極低，勝率卻在最前段。拿到輔助型英雄時，不要改拿傷害卡。</p>
+      <p class="ev">嗚咿嗚咿 54.8%、奏鳴曲 53.3%、風語者的祝福 53.3%、靈魂炸彈 53.1%，選取率都在 0.5% 以下。</p></div>
+    <div class="rule"><h3>賭博卡的期望值不高</h3>
+      <p>手上有一張確定契合的卡時，不要換成隨機。只有三張都不合用，質變才是合理的出路。</p>
+      <p class="ev">質變：稜鏡 50.7%、質變：大混亂 49.0%、質變：金級 48.5%、潘朵拉的寶盒 46.3%。</p></div>
+    <div class="rule"><h3>成長型越早拿越值</h3>
+      <p>疊層、任務與金幣類的收益隨時間累積，第一、二選拿到最好；到第四選時，直接給數值的卡通常更實在。增幅解鎖後要到下一次死亡才能選，已解鎖時不必刻意保命。</p>
+      <p class="ev">堆層暴龍 54.5%、心鋼起來 52.3%、無限循環 51.7%、極度邪惡 51.7%，多數只在前兩選出現。</p></div>
+  </div>
+
+  <div class="duo">
+    <div class="box"><h3>冷門但勝率高</h3><p class="small muted">勝率 52% 以上、選取率不到 1%。看到時值得多看一眼。</p><ul class="mini" id="gems"></ul></div>
+    <div class="box"><h3>熱門但勝率低</h3><p class="small muted">選取率 2% 以上、勝率不到 48.5%。確認真的契合再拿。</p><ul class="mini" id="traps"></ul></div>
+    <div class="box"><h3>墊底的十張</h3><p class="small muted">除非有明確的搭配理由，否則跳過。</p><ul class="mini" id="worst"></ul></div>
+  </div>
+  <p class="note">讀數字的前提：勝率是「選了這張的人」的結果。拔劍吧 58.4% 是因為它幾乎只被適合的英雄選走，並不代表誰拿都有這個數字。選取率低於 0.5% 的項目，請把勝率當作方向而非定論。</p>
+</section>
+
+<!-- ============ 機率 ============ -->
+<section id="sec-odds" role="tabpanel" aria-labelledby="tab-odds" hidden>
+  <div class="prose">
+    <h2>每一選會出什麼稀有度</h2>
+    <p class="muted">一場四選。開局一選，之後在 7、11、15 等解鎖。同一選的三張為同一稀有度。</p>
+  </div>
+  <div class="box">
+    <div class="legend"><span><i class="s-S"></i>白銀</span><span><i class="s-G"></i>黃金</span><span><i class="s-P"></i>稜鏡</span></div>
+    <div id="stages" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+  <div class="duo">
+    <div class="box">
+      <h3>第一選之後，第二選的機率</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>第一選是</th><th class="n">白銀</th><th class="n">黃金</th><th class="n">稜鏡</th></tr></thead>
+        <tbody>
+          <tr><td>白銀</td><td class="n">0.0%</td><td class="n">56.9%</td><td class="n hi">43.1%</td></tr>
+          <tr><td>黃金</td><td class="n">33.0%</td><td class="n">39.8%</td><td class="n">27.2%</td></tr>
+          <tr><td>稜鏡</td><td class="n">32.4%</td><td class="n">48.8%</td><td class="n">18.7%</td></tr>
+        </tbody></table></div>
+    </div>
+    <div class="box">
+      <h3>第二、三選之後，下一選的機率</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>這一選是</th><th class="n">白銀</th><th class="n">黃金</th><th class="n">稜鏡</th></tr></thead>
+        <tbody>
+          <tr><td>白銀</td><td class="n">26.3%</td><td class="n">41.9%</td><td class="n hi">31.8%</td></tr>
+          <tr><td>黃金</td><td class="n">27.8%</td><td class="n">43.4%</td><td class="n">28.9%</td></tr>
+          <tr><td>稜鏡</td><td class="n">35.1%</td><td class="n">48.2%</td><td class="n">16.7%</td></tr>
+        </tbody></table></div>
+    </div>
+  </div>
+  <div class="rules">
+    <div class="rule"><h3>開局白銀不必氣餒</h3><p>第一選白銀只有約一成機率，而且第二選保證不是白銀，稜鏡機率升到 43.1%。系統有補償。</p></div>
+    <div class="rule"><h3>剛拿稜鏡，下一選別期待</h3><p>上一選是稜鏡時，下一選再出稜鏡的機率降到 17% 至 19%。稜鏡那一選要選能撐全場的卡。</p></div>
+    <div class="rule"><h3>黃金才是主體</h3><p>每一選有四成以上是黃金，最常見的組合是「金、金、稜、金」與「金、金、金、稜」，各約 4.0%。四選全稜鏡只有 0.1%。熟悉黃金池比背稜鏡池更有用。</p></div>
+  </div>
+</section>
+
+<!-- ============ 4.0 ============ -->
+<section id="sec-next" role="tabpanel" aria-labelledby="tab-next" hidden>
+  <div class="prose">
+    <h2>4.0：音樂主題更新</h2>
+    <p>官方排程為 26.21 版本，2026 年 10 月 21 日（太平洋時間）；台服實際開放時間以公告為準。「4.0」是玩家與媒體的稱呼，內容包含樂團嘉賓、新增幅、試演任務與新通行證。</p>
+    <p class="note">以下全部來自測試服（PBE）資料，核對日期為 10 月 8 日。名稱為簡體資料的暫譯，數值與名單上線前都可能調整。目前沒有任何 4.0 的勝率資料，本頁不對新增幅做強度排名。</p>
+  </div>
+
+  <div class="box">
+    <h3>樂團嘉賓：每場隨機一組，改變整場規則</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>樂團（暫稱）</th><th>效果</th><th>選卡上的意義</th></tr></thead>
+      <tbody>
+        <tr><td>真實傷害</td><td>多殺、終結連殺與拆塔可獲得鐵砧</td><td>能收頭、能推塔的陣容受益</td></tr>
+        <tr><td>心之鋼</td><td>選擇帶貼紙的增幅有額外加成</td><td>貼紙卡的價值提高，比較時要算進去</td></tr>
+        <tr><td>K/DA</td><td>集齊照片卡可多拿一個增幅</td><td>等於多一選，優先完成收集</td></tr>
+        <tr><td>五殺搖滾</td><td>強化一個基本技能，18 級再強化一個</td><td>綁定技能類增幅更容易疊在同一招</td></tr>
+        <tr><td>咖啡甜心</td><td>血包治療增強並提供跑速</td><td>消耗戰拉長，續戰型吃香</td></tr>
+        <tr><td>PROJECT 主題</td><td>每輪首次重骰同時提升稀有度</td><td>第一次重骰幾乎必按</td></tr>
+        <tr><td>太空律動</td><td>跳舞可觸發全隊金幣獎勵</td><td>經濟加快，裝備依賴型英雄受益</td></tr>
+        <tr><td>蜜蜂樂團</td><td>收集蜂蜜拿獎勵，並須閃避會傷人的蜜蜂</td><td>走位空間受限，短手較吃虧</td></tr>
+      </tbody></table></div>
+    <p class="small muted">「選卡上的意義」是依機制所做的推論，並非實測結果。</p>
+  </div>
+
+  <div class="duo">
+    <div class="box">
+      <h3>預計移除的 14 張</h3>
+      <p class="small muted">括號內為現行勝率。前段班有三張在名單上，依賴它們的打法需要另找替代。</p>
+      <ul class="mini" id="gone"></ul>
+    </div>
+    <div class="box">
+      <h3>上線前可以先做的事</h3>
+      <ul class="mini">
+        <li><span>天降戰熊、燃燒利息、土豪賭客將離開，持續傷害與經濟流的收益會下降，改練不依賴它們的選法。</span></li>
+        <li><span>新增多張「綁定技能」與任務型增幅，價值取決於綁到哪一招，選之前先看清楚。</span></li>
+        <li><span>上線後前一到兩週的勝率樣本不穩，先沿用本頁的判斷原則，而非照抄排行。</span></li>
+        <li><span>試演任務有獨立獎勵（含新增幅），例如在地圖中央跳舞、單場雪球命中八次。</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box">
+    <h3>測試服新增幅一覽（暫譯）</h3>
+    <div class="scroll"><table id="newtab">
+      <thead><tr><th>稀有度</th><th>名稱</th><th>效果</th></tr></thead>
+      <tbody></tbody></table></div>
+    <p class="small muted">「？？？」表示綁定某一個技能，實際對象依英雄而定。媒體報導的「新增約 40 個」包含樂團專用的技能強化與開發遺留項目，並非正式數量。</p>
+  </div>
+</section>
+
+<footer>
+  <span>資料來源</span>
+  <ul>
+    <li><a href="https://aramkit.com/zh-TW/augments" target="_blank" rel="noopener">ARAMKit 海克斯排行</a>與<a href="https://aramkit.com/zh-TW/augment-rarity" target="_blank" rel="noopener">稀有度機率</a>：勝率、選取率、梯隊、繁中名稱（v16.20）</li>
+    <li><a href="https://aramkit.com/zh-TW/champions" target="_blank" rel="noopener">ARAMKit 英雄頁</a>：173 位英雄各自收益最高的 12 張增幅（2026-10-13 擷取）。來源未提供樣本數，冷門英雄的數字波動較大；不在前 12 名的增幅沿用全體勝率</li>
+    <li><a href="https://mobalytics.gg/lol/guides/aram-mayhem-tier-list" target="_blank" rel="noopener">Mobalytics 增幅列表</a>：稀有度與效果說明（2026-07-20 版，之後的調整可能未反映）</li>
+    <li><a href="https://arammayhem.com/zh-tw/articles/aram-mayhem-4-0" target="_blank" rel="noopener">ARAM Mayhem 4.0 前瞻</a>與<a href="https://news.qq.com/rain/a/20261007A03EU400" target="_blank" rel="noopener">騰訊新聞測試服新符文預覽</a>：4.0 內容</li>
+  </ul>
+  <span>「適用定位」為本頁依效果所做的歸類。另有 5 個增幅（重新載入、專精輔助、球鞋收藏家、雙重打擊、躍回）樣本不足，未列入。本頁與 Riot Games 無關。</span>
+</footer>
+</div>
+
+<div class="tray" id="tray" hidden><div class="tray-in" id="trayIn"></div></div>
+
+<script>
+// 名稱|英文|稀有度(P稜鏡 G黃金 S白銀 X未確認)|梯隊|勝率|選取率|定位(T坦 M法 A射手普攻 F鬥士刺客 E輔助 U通用)|效果|4.0移除
+const RAW = `拔劍吧|Draw Your Sword|P|S|58.4|1.5|A|變為近戰，大幅提升攻擊、攻速、生命、跑速與吸血|
+天降戰熊|DropBear|P|S|54.8|1.7|U|死亡時，帶著你所有增幅的巨大提伯斯從天而降|1
+嗚咿嗚咿|Wee Woo Wee Woo|G|S|54.8|0.3|E|朝低血量隊友移動時加速，目標血量越低治療護盾越強|
+伊卡西亞殞落|Icathia's Fall|P|S|54.6|0.8|T|獲得班米燼火；集齊兩件獻祭裝後合成虛空獻祭|
+堆層暴龍|Stackosaurus Rex|X|S|54.5|0.6||疊層類效果獲得額外層數|
+基本功夫|Back to Basics|P|S|53.5|2.8|MF|封印大絕，換取技能傷害、治療護盾與技能急速|
+巴龍之爪|Hand of Baron|P|S|53.6|0.3|U|獲得 25% 適性之力，大幅強化周遭友方小兵|
+燃燒利息|Combusting Interest|G|S|53.4|4.4|MT|對英雄的燃燒與持續傷害會產生金幣|1
+奏鳴曲|Sonata|G|S|53.3|0.4|E|自動交替施放治療護盾與加速|
+瘋狂科學家|Mad Scientist|P|S|53.2|3.1|U|每次重生隨機獲得坦克型或高機動型能力組|
+風語者的祝福|Windspeaker's Blessing|P|S|53.3|0.3|E|治療與護盾額外給予雙抗|
+煉獄使者|Infernal Conduit|P|S|53.1|2.2|M|技能命中附加可疊加的燃燒，燃燒會縮短基本技能冷卻|
+靈魂炸彈|Spirit Bomb|P|S|53.1|0.3|E|治療與護盾累積炸彈，用來治療隊友|
+共鳴施放|Echo Cast|P|A|52.6|0.6||施放指定技能時，分身朝游標位置再施放一次|
+土豪賭客|High Roller|P|A|52.4|1.2|U|附近敵人死亡時有機率掉落能力值鐵砧|1
+別轉台|Don't Change the Channel|X|A|52.4|0.5|||
+心鋼起來|Steel Your Heart|G|A|52.3|3.7|T|任務：取得心之鋼並累積 300 生命；獎勵：成長量提高 200%|
+毫髮無傷|Tank It Or Leave It|S|A|52.3|1.4|AT|依暴擊率獲得減傷機率（上限 50%），並 +25% 暴擊率|
+靈魂虹吸|Soul Siphon|G|A|52.2|4.0|A|暴擊造成傷害的 12% 轉為治療|
+溫泉加速|Homeguard|X|A|52.2|2.1|U||
+俠盜恆毅|Outlaw's Grit|G|A|52.2|1.0|F|位移後獲得雙抗，可疊 5 層共 60|
+巨人殺手|Giant Slayer|P|A|52.0|2.7|U|體型縮小並 +20% 跑速，對體型比你大的英雄增傷|
+逃跑計畫|Escape Plan|X|A|51.9|3.0|||
+雙刀流|Dual Wield|P|A|51.9|2.5|A|普攻追加一發 40% 傷害的箭矢並套用命中效果|
+升級獻祭|Upgrade Immolate|S|A|51.9|1.4|T|獻祭類裝備每跳依影響的敵人數回復生命|
+究極九頭蛇|Ultra Hydra|X|A|51.9|1.8|F||
+果斷|Stay Resolute|X|A|51.8|0.7|||
+無限循環|Infinite Recursion|P|A|51.7|3.6|M|+60 技能急速，每次參與擊殺再 +3|
+術士果汁盒|Warlock Juicebox|G|A|51.7|5.2|U|獲得全能吸血|
+極度邪惡|Phenomenal Evil|G|A|51.7|4.2|M|技能傷害敵方英雄時永久疊加魔法攻擊|
+一轉就贏|Spin To Win|S|A|51.7|1.3|F|旋轉類技能 +30% 傷害並縮短冷卻|
+自始至終|From Beginning to End|G|A|51.7|3.8|MF|獲得黑暗收割與先發制人|
+重型打手|Heavy Hitter|S|A|51.6|2.8|TF|普攻附加依最大生命計算的傷害|
+祕術拳擊|Mystic Punch|P|A|51.6|2.6|AF|普攻命中縮短技能冷卻 1.25 秒|
+又快又穩|Swift and Safe|S|A|51.6|0.9|F|位移後獲得 2 秒護盾|
+飛影跑法|Shadow Runner|X|A|51.5|1.8|F||
+巨人|Goliath|P|A|51.5|3.2|TF|獲得生命、適性之力與體型|
+縮小引擎|Shrink Engine|G|A|51.3|7.1|M|參與擊殺疊層：技能急速、跑速、體型縮小；死亡失去 65%|
+全能之魂|Omni Soul|P|A|51.4|0.7|U|隨機獲得 3 個龍魂|
+死亡循環|Circle of Death|P|A|51.3|0.7|F|治療與回復會對附近敵人造成魔法傷害|
+劃地為王|Terrain'd|G|A|51.3|0.5||指定技能額外造成範圍傷害|
+別眨眼|Don't Blink|S|A|51.3|0.5|U|依你與目標的跑速差提高傷害|
+壓力鍋|Pressure Cooker|G|A|51.2|1.7|T|每秒對附近敵人疊加燃燒（依最大生命），任務可升級|
+侵蝕裝甲|Erosion|S|A|51.1|1.5|U|每次傷害削減目標雙抗 1.5%，最多 30%|
+靈光一閃|Eureka|P|A|51.1|4.2|M|獲得等同 30% 魔法攻擊的技能急速|
+暴擊沖天炮|Critical Missile|G|A|51.0|4.8|A|暴擊時發射沖天炮，並 +25% 暴擊率|1
+小丑學院|Clown College|P|A|51.0|2.6|F|獲得薩科的背刺、欺詐魔術與分身爆炸|
+超強大腦|Big Brain|G|A|51.0|1.1|M|獲得等同 300% 魔法攻擊的護盾，重生後補滿|
+烏莉特的法帽|Wooglet's Witchcap|P|A|50.9|1.6|M|任務：將裝備升級為烏莉特的法帽|
+蠻力重擊|Blunt Force|S|A|50.9|3.9|AF|物理攻擊 +20%|
+斗內|Donation|G|A|50.9|2.9|U|立即獲得 1750 金幣|
+坦克引擎|Tank Engine|G|A|50.8|5.1|T|參與擊殺疊層：最大生命與體型各 +5%；死亡失去 65%|
+手腳麻利|Deft|S|A|50.8|2.4|A|+60% 攻擊速度|
+海洋之魂|Ocean Soul|S|A|50.8|1.5|U|獲得海洋龍魂|
+質變：稜鏡|Transmute: Prismatic|G|A|50.7|9.6|U|隨機獲得一個稜鏡增幅|
+見縫插針|Vulnerability|G|A|50.7|4.3|M|裝備與持續傷害可暴擊，並 +25% 暴擊率|
+狂戰士|Zealot|S|A|50.7|2.3|A|獲得攻擊速度與暴擊率|
+因心成體|Mind to Matter|S|A|50.7|1.4|MT|獲得等同 50% 最大魔力的生命|
+阿福英雄|Urf's Champion|P|A|50.6|1.4|U|任務：參與 18 次擊殺；獎勵：黃金鍋鏟|
+幻影武器|Ethereal Weapon|G|A|50.6|5.0|AM|技能可套用命中效果|
+超遠射擊|From Downtown|G|A|50.6|1.8|M|任務：以技能遠距命中；獎勵：對目標降下隕石|
+餘音震盪|Sonic Boom|S|A|50.6|0.3|E|治療護盾對周圍敵人造成範圍傷害與緩速|
+當頭棒喝！|BONK!|G|A|50.6|1.0||指定技能強化的攻擊對目標與周圍追加傷害|
+能力值堆起來！|Stats on Stats!|G|A|50.5|1.7|U|獲得 3 個能力值鐵砧，金級與稜鏡機率提高|
+吃過路兵|En Passant|P|A|50.5|0.6|F|定期標出敵人要害，命中造成真實傷害並回血加速|
+超狙武器|Scopier Weapons|G|A|50.4|3.1|A|攻擊距離 +200（近戰 +100）|
+急救箱|First-Aid Kit|S|A|50.5|0.4|E|+20% 治療與護盾強度|
+棒棒回力鏢|OK Boomerang|G|A|50.4|0.3|U|自動向最近的敵方英雄丟出回力鏢|
+飲血|Goredrink|S|B|50.3|3.1|U|+15% 全能吸血|
+大師鑄造|Forged By The Master|S|B|50.2|2.6|U|提高裝備與增幅造成的傷害|
+腳程加速|With Haste|G|B|50.2|1.8|M|獲得等同 70% 技能急速的跑速|
+轉換惡作劇|EscAPADe|S|B|50.2|1.6|A|魔法攻擊轉換為物理攻擊|
+腿部訓練日|Leg Day|S|B|50.1|2.1|U|獲得跑速與緩速抗性|
+溢流|Overflow|G|B|50.1|1.1|M|技能耗魔加倍，換取傷害、治療與護盾加成|
+過度延伸|Overextender|G|B|50.1|0.3||回城進入大砲，射程、速度與傷害大幅提升|
+最終型態|Final Form|P|B|50.0|1.9|U|施放大絕後 10 秒：50% 最大生命護盾、吸血與跑速|
+天界之身|Celestial Body|G|B|50.0|2.8|T|+1500 生命，但傷害 -10%|
+暴擊節奏|Critical Rhythm|G|B|49.9|2.6|A|暴擊疊加攻速至 60%，並 +25% 暴擊率|
+升級狂怒九頭蛇|Upgrade Ravenous Hydra|G|B|49.9|1.5|F|強化狂怒九頭蛇|
+黃金撕裂|Goldrend|P|B|49.9|0.6|U|普攻與技能對英雄追加魔法傷害並加速|
+循環利用|Recursion|G|B|49.8|8.0|M|+60 技能急速|
+急遽成長|Growth Spurt|G|B|49.8|1.7|T|召喚師技能：變大並擊飛周圍敵人，短暫大幅增加生命|
+升級無盡之刃|Upgrade Infinity Edge|G|B|49.8|4.4|A|無盡之刃獲得浮動暴擊傷害，+500 金幣與 25% 暴擊率|
+射手法師|Marksmage|G|B|49.8|2.2|AM|普攻追加等同 75% 魔法攻擊的傷害|
+輕舞飛揚|Tap Dancer|P|B|49.8|1.1|A|普攻疊加跑速，並依跑速獲得攻速|
+頂狙武器|Scopiest Weapons|P|B|49.7|1.6|A|攻擊距離 +250（近戰 +150）|
+痛恨一擊|It's Critical|G|B|49.6|1.6|A|+50% 暴擊率|
+全部都給你|All For You|G|B|49.6|0.4|E|對隊友的治療與護盾 +30%|
+幻焰之誓|Empyrean Promise|P|B|49.7|0.1|E|召喚師技能：衝向隊友，雙方獲得護盾|
+雪地踱步|Ice Cold|S|B|49.5|2.0|M|你的緩速效果額外降低 75 跑速|
+升級閃耀劍|Upgrade Sheen|G|B|49.5|1.7|F|咒刃追加目標 4% 最大生命傷害並回血|
+士兵術師|Minionmancer|G|B|49.5|0.6||寵物的傷害、生命與體型 +40%|
+蛋白飲|Protein Shake|P|B|49.5|0.2|TE|依雙抗提高治療與護盾強度|
+痛打一頓|Slap Around|S|B|49.4|1.3|T|定身敵方英雄時永久疊加適性之力|
+升級中婭沙漏|Upgrade Zhonya's|S|B|49.4|1.7|M|凍結期間可移動，冷卻降至 45 秒|
+黎明使者之決意|Dawnbringer's Resolve|G|B|49.4|1.5|TF|生命低於 50% 時，3 秒內回復 30% 最大生命|
+食魂者|Soul Eater|G|B|49.3|1.0|T|定身敵方英雄時永久 +20 生命|
+雙響炮|Twin Fire|S|B|49.3|3.0|M|技能命中時發射沖天炮|
+魔法導彈|Magic Missile|G|B|49.3|3.1|M|技能命中發射 3 發沖天炮，依目標最大生命造成真實傷害|
+靈活轉換|ADAPt|S|B|49.3|3.6|M|物理攻擊轉為魔法攻擊，並額外獲得魔法攻擊|
+升級死亡之舞|Upgrade Death's Dance|X|B|49.3|2.0|F||
+火狐|Firefox|S|B|49.2|0.7|U|自動施放狐火，追擊最近的敵方英雄|
+鯊魚誘餌|Shark Bait|G|B|49.2|0.6||死亡數秒後，鯊魚咬擊周圍敵人|
+升級破曉綻放之劍|Upgrade Sword of Blossoming Dawn|P|B|49.3|0.1|E|強化破曉綻放之劍：提高治療量並獲得攻速|
+暴擊治療|Critical Healing|G|B|49.2|0.3|E|治療護盾有機率加強 40%，並 +25% 暴擊率|
+陰魂不散|Hellbent|P|B|49.2|0.4|U|對英雄造成傷害疊層，滿層時死亡可強化復活|
+小小助力|Lil' Extra Help|G|B|49.1|1.5||指定技能持續期間獲得射程與攻速|
+狂躁！|Get Excited|G|B|49.1|2.3|AF|參與擊殺後 4 秒內 +100% 跑速與攻速|
+殘忍|Cruelty|P|B|49.1|0.7|T|定身敵方英雄時召喚彗星|
+質變：大混亂|Transmute: Chaos|P|B|49.0|2.7|U|隨機獲得 2 個增幅|
+能力值堆堆堆起來！|Stats on Stats on Stats!|P|B|49.1|0.6|U|獲得 4 個鐵砧，下次選增幅時多一次重骰|
+不祥契約|Ominous Pact|P|B|49.0|0.7|M|技能消耗 5% 當前生命，依已損生命獲得魔攻、跑速與吸血|
+哎呀，我的金幣！|Yowch, My Coins!|G|B|48.9|1.0|U|參與擊殺時敵人掉落金幣，隊友也能撿|1
+無盡屠滅|Endless Decimation|G|B|48.9|2.4|F|戰鬥中自動揮出環形斧擊，外圈命中可回血|
+巨像之勇氣|Courage of the Colossus|P|B|48.9|0.7|T|定身敵方英雄時獲得護盾|
+亮起來！|Light 'em Up!|S|B|48.9|0.6|A|每第 4 下普攻發射 4 發沖天炮|
+三連射|Tripleshot|X|B|48.9|0.5|||
+旋風鎚|Fan the Hammer|P|B|48.8|2.1|A|普攻朝四個方向各發射 5 發沖天炮|1
+大地覺醒|Earthwake|P|B|48.9|0.2|F|位移路徑留下延遲引爆的爆炸|
+守護面紗|Veil of Warding|X|B|48.8|0.6|||
+戰爭交響曲|Symphony of War|P|B|48.7|1.1|AF|獲得征服者與致命節奏|
+自爆炸彈客|Dive Bomber|S|B|48.7|2.2|U|死亡時爆炸，造成目標 20% 最大生命的真實傷害|
+灼熱黎明|Searing Dawn|G|B|48.7|0.4|TE|技能標記敵人，隊友下一擊追加魔法傷害|
+適性之護|Adaptive Ward|S|B|48.7|0.4||指定技能命中後，依對方傷害類型獲得抗性|
+老練狙擊手|Skilled Sniper|G|B|48.6|2.8|M|在 700 距離外以基本技能命中英雄可縮短其冷卻|
+法術逬裂|Spell Split|X|B|48.6|0.7|||
+虹吸|Siphon|X|B|48.6|1.3|||
+貪婪束縛|Ravenous Bind|G|B|48.6|2.1||以指定技能定身敵人時追加傷害並回血|
+煽風點火|Firebrand|G|B|48.6|1.3|A|普攻附加可疊加的燃燒（目標最大生命比例）|
+巨無霸雪球|Biggest Snowball Ever|P|B|48.5|2.3|U|雪球變巨大並穿透小兵，命中後爆炸擊飛|
+女巫思維|Witchful Thinking|S|B|48.5|2.2|M|獲得固定魔法攻擊|
+因信得力|Empowered By The Faithful|P|B|48.6|0.2|E|治療護盾累積奉獻，滿層時釋放傷害衝擊波|
+純粹 - 法師|Purist: Caster|X|B|48.5|3.3|M||
+質變：金級|Transmute: Gold|S|B|48.5|4.3|U|隨機獲得一個黃金增幅|
+雙修大師|Master of Duality|P|B|48.5|0.9|AM|普攻疊魔法攻擊，技能疊物理攻擊|
+閃光俠|Flashy|G|B|48.5|1.8|U|閃現變為 3 次充能|
+大絕覺醒|Ultimate Awakening|P|B|48.5|1.9|M|施放大絕重置基本技能並獲得急速|
+寶石手套|Jeweled Gauntlet|P|B|48.4|5.7|M|技能可暴擊，並依魔法攻擊獲得暴擊率|
+收頭好手|Kill Secured|S|B|48.3|0.7|F|朝低血量敵方英雄移動時加速|
+海克斯科技龍魂|Hextech Soul|S|B|48.3|1.0|U|獲得海克斯科技龍魂|
+慈悲之擊|Mercy's Strike|G|B|48.4|0.2||使用指定技能後，下一次普攻獲得射程、攻速與額外傷害|
+劍舞之心|Blade Waltz|P|B|48.3|0.9|F|召喚師技能：無法被選取並連續衝刺斬擊 5 次|
+豪豬|Porcupine|G|B|48.3|0.8|T|受到英雄傷害累積尖刺，爆發時傷害並緩速周圍敵人|
+巨大盾牌|Mighty Shield|X|B|48.3|0.2|||
+土司和起司|Bread And Cheese|G|B|48.2|2.3|U|E 技能 +100 技能急速|
+回春|Rejuvenation|X|B|48.3|0.3|||
+颱風|Typhoon|S|B|48.2|1.3|A|普攻發射沖天炮|
+射程強化改造|Scoped Weapons|S|B|48.2|1.4|A|攻擊距離 +75（近戰 +50）|
+奪命飛踢|Dropkick|P|B|48.1|4.0|TF|斬殺低血量英雄並踢飛屍體，撞擊後爆炸|1
+可靠武器|Trusty Weapon|S|B|48.2|0.6||以指定技能命中敵人累積友誼，提高傷害|
+牙仙|Tooth Fairy|G|B|48.0|5.3|FM|爆發擊殺掉落牙齒，拾取後永久獲得雙穿|
+能力值！|Stats!|S|B|48.0|0.6|U|獲得 2 個能力值鐵砧|
+鯊魚風暴|Shark Tempest|G|C|47.9|0.8|U|雪球周圍有鯊魚環繞，命中英雄後將其困住|
+能力強化|Bolstered|X|C|47.8|0.6|||
+該出手了|It's Go Time|S|C|47.8|0.6||啟動指定技能期間獲得跑速|
+土司和奶油|Bread And Butter|G|C|47.8|3.1|U|Q 技能 +100 技能急速|
+煉獄惡靈|Infernal Soul|S|C|47.8|1.1|U|獲得煉獄龍魂|
+雙重命中|Double Tap|G|C|47.8|1.5|A|暴擊的普攻額外套用一次命中效果，並 +25% 暴擊率|
+衝鋒|Dashing|P|C|47.7|1.3|F|位移技能獲得技能急速|
+疾速追擊|Pursuit of Haste|G|C|47.6|3.2||任務：以指定技能命中英雄；獎勵：該技能獲得急速|
+閃光彈|Flashbang|S|C|47.8|0.1|U|閃現時產生爆炸，造成傷害並緩速|
+大法師|Archmage|P|C|47.6|3.3|M|施放技能時返還另一個隨機技能 30% 冷卻|
+泰坦的決意|Titan's Resolve|P|C|47.6|1.2|T|受傷或造成傷害疊層，獲得適性之力、雙抗、體型與韌性|
+升級收藏家|Upgrade Collector|S|C|47.5|2.6|A|收藏家的斬殺門檻隨擊殺提高，並多給金幣|
+伸縮手掌黏黏樂|Squishy Slappy Grab|X|C|47.6|0.3|||
+強化攻擊|Juiced|X|C|47.5|0.8|||
+裂地龍魂|Mountain Soul|S|C|47.5|0.3|U|獲得裂地龍魂|
+頂尖發明家|Apex Inventor|G|C|47.4|1.4|U|+100 裝備急速|
+不可通行|Impassable|G|C|47.4|0.6|T|獲得餘震與冰川增幅|
+聖光顯靈|Divine Intervention|G|C|47.3|1.1|TE|自動施放塔里克大絕，使周圍隊友無敵 2.5 秒|
+拍拍鼓勵|Pat On The Back|G|C|47.3|0.4|U|經過隊友身邊時獲得護盾與跑速|
+自然治療|Nature is Healing|G|C|47.3|0.7|U|站在草叢中每秒回復最大生命|
+穿針引線|Thread the Needle|G|C|47.2|3.3|U|+18% 物理穿透與魔法穿透|
+追求力量|Pursuit of Power|G|C|47.1|2.9||任務：以指定技能命中英雄；獎勵：永久提高該技能傷害|
+觸發地獄火狂襲|Triggered Inferno|P|C|47.1|1.2|AF|獲得煞蜜拉的評價機制，達 S 級時觸發地獄火狂襲|
+土司和果醬|Bread And Jam|G|C|47.0|1.9|U|W 技能 +100 技能急速|
+隨我同困|Stuck in Here With Me|X|C|47.0|0.4|T||
+殺戮時間|It's Killing Time|G|C|46.9|2.2|MF|大絕對所有敵方英雄施加死亡印記，5 秒後引爆儲存的傷害|
+輸出超負荷|Overloaded|P|C|46.9|1.3||使用其他技能時，重置指定技能的冷卻|
+舞會皇后|Prom Queen|P|C|46.9|0.2|T|自動施放銳空的大絕|
+妖精魔法|Fey Magic|P|C|46.9|1.0|M|大絕命中時將敵人變形 2 秒|
+暴擊和施法|Crit 'n Cast|S|C|46.8|0.7|A|依暴擊率獲得技能急速|1
+搗蛋鬼|Poltergeist|X|C|46.8|0.2|||
+共享治療|Our Healing|G|C|46.7|0.6|U|周圍有人獲得治療時，你也回復其中 15%|1
+暗夜潛行|Nightstalking|G|C|46.7|1.9|F|參與擊殺後隱形 1.5 秒|
+無法掌握|Can't Touch This|P|C|46.6|1.0|U|施放大絕後 2 秒無敵|
+靈魂淨化|Spiritual Purification|G|C|46.5|1.1|U|參與擊殺時屍體爆炸，並留下緩速區|1
+快步移動|Quickstep|G|C|46.5|0.9||使用指定技能時朝游標方向衝刺|
+昇華儀式|Rite of Ascension|P|C|46.4|1.1|U|參與擊殺時敵人掉落精華，給予跑速與技能重置|
+潘朵拉的寶盒|Pandora's Box|P|C|46.3|2.2|U|現有增幅全部變為隨機稜鏡增幅|
+恐懼|Terror|G|C|46.4|0.2||施放指定技能時恐懼周圍敵人|
+彈珠台|Pinball|G|C|46.3|1.2|U|雪球變為會反彈的彈珠，造成真實傷害|
+縮小光線|Shrink Ray|G|C|46.2|1.2|A|普攻使目標造成的傷害降低 15% 並縮小|
+連鎖反應|Chain Reaction|P|C|46.2|0.7||被指定技能擊退的目標撞到其他英雄時，雙方被擊飛並受傷|
+降雪之日|Snowday|X|C|46.2|0.9|||
+無敵大絕|Ultimate Unstoppable|S|C|46.1|1.3|U|施放大絕時免疫控制|
+終極革新|Ultimate Revolution|P|C|45.8|1.6|U|大絕可重置自身冷卻|
+多重射擊|Multishot|P|C|45.8|0.6||任務：以指定技能命中英雄；獎勵：追加投射物|
+躲草叢|Hide on Bush|G|C|45.9|0.2|U|進入草叢後 2 秒內傷害 +20%|1
+二次閃現|Flash 2|S|C|45.9|0.0|U|取得閃現並獲得召喚師技能急速|
+高能量場域|Surge Field|X|D|45.6|0.3|||
+升級突破天際|Upgrade Sundered Sky|G|D|45.3|0.8|F|強化突破天際|
+神聖雪球|Holy Snowball|P|D|45.0|0.6|U|雪球衝刺抵達後無敵 1.5 秒|
+針插|Pin Cushion|P|D|44.8|0.4||指定技能期間的攻擊會施加印記，結束時引爆|
+雪爆|Snowblast|G|D|44.6|0.9|U|再次施放雪球時傷害提高並擊飛目標|
+大絕電腦|Ult Bot|X|D|44.3|1.4|||1
+把我耍得團團轉|Spin Me Right Round|X|D|44.2|0.2|||
+玻璃大砲|Glass Cannon|P|D|43.1|0.4|AM|生命上限鎖在 70%，換取 15% 額外真實傷害|
+普羅衝鋒|Poro Stampede|P|D|42.4|0.1||任務：餵食普羅；獎勵：普羅衝鋒召喚師技能|1
+次元轉移|Dimension Shift|P|D|41.8|0.1||召喚師技能：將範圍內所有人傳送到另一個次元|1
+封我為王|King Me|P|D|31.7|0.3||進入敵方基地可獲得隨機稜鏡增幅與裝備升級|`;
+
+const A = RAW.split('\n').map((l,i)=>{const p=l.split('|');return{id:i,zh:p[0],en:p[1],r:p[2],t:p[3],wr:+p[4],pr:+p[5],roles:p[6]||'',fx:p[7]||'',gone:p[8]==='1',rank:i+1}});
+const RAR={P:'稜鏡',G:'黃金',S:'白銀',X:'未確認'};
+const ROLE={T:'坦克',M:'法師',A:'射手／普攻',F:'鬥士／刺客',E:'輔助'};
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const st={q:'',role:'',rar:'',tier:'',sort:'wr',hide:false,pins:[],champ:null};
+
+// 各英雄收益最高的 12 張：slug:名稱:英雄平均勝率:增幅序號,該英雄勝率,收益率;…
+const CHRAW = `yasuo:犽宿:57.7:33,65.2,7.5;71,62.6,4.8;14,62.8,5;56,61.9,4.2;17,61.5,3.7;45,61.1,3.4;18,60.6,2.9;6,61.4,3.7;50,60.5,2.7;20,60.2,2.4;1,60.4,2.7;22,59.9,2.2
+belveth:貝爾薇斯:56.9:157,64.7,7.8;45,63,6.1;14,63.1,6.2;117,62.7,5.8;17,62.2,5.3;25,61.7,4.8;105,61.9,5;146,61.1,4.2;97,61.3,4.4;32,60.9,4;18,60.4,3.5;6,62,5.1
+lillia:莉莉亞:56.7:29,63.8,7.1;1,61.3,4.5;5,61,4.3;11,60.7,4;48,60.1,3.4;7,59.4,2.7;43,59.6,2.9;6,59.9,3.1;28,58.7,2;31,58.8,2.1;9,58.4,1.6;27,58.3,1.5
+gwen:關:56.6:1,63.5,6.9;59,62.8,6.2;5,61.5,4.9;48,61,4.4;23,60.4,3.8;83,59.8,3.2;14,59.9,3.3;31,59.5,2.9;50,59.4,2.8;54,59,2.5;117,59.7,3.1;22,59,2.5
+twistedfate:逆命:56.4:13,69.8,13.4;5,59.9,3.5;19,59.8,3.4;9,59,2.7;47,59,2.7;48,58.9,2.5;28,58.3,2;29,58.1,1.7;67,58.3,2;53,58.2,1.8;31,57.9,1.5;21,57.9,1.5
+yone:犽凝:56.3:33,65.2,8.9;6,62.3,6;14,61.6,5.3;34,61.4,5.1;56,60.9,4.6;17,60.2,3.9;5,60.4,4.2;18,59.8,3.5;20,60,3.7;93,60,3.8;45,59.4,3.1;50,59.4,3.1
+hecarim:赫克林:56.1:27,66,9.9;5,63.7,7.6;9,63.5,7.4;136,63.3,7.2;33,63,6.9;78,62.4,6.3;26,62.2,6.1;174,61.2,5;64,60.5,4.4;22,59.6,3.5;6,60.5,4.4;80,58.5,2.4
+kayle:凱爾:55.4:58,61,5.6;6,61.4,6;56,59.7,4.3;83,59.4,4;48,59.6,4.2;134,59.3,3.8;14,59.3,3.9;47,58.4,2.9;28,57.7,2.3;44,57.7,2.3;54,57.5,2;130,57.6,2.1
+morgana:魔甘娜:55.3:37,59.5,4.3;5,59.3,4;27,59.1,3.8;6,59.1,3.9;19,58.2,2.9;9,58.1,2.8;21,57.6,2.4;43,57.2,2;70,57.2,1.9;38,57.5,2.2;53,56.9,1.7;29,56.3,1
+masteryi:易大師:54.6:25,63.9,9.3;46,60.5,5.9;33,59.7,5;157,58.8,4.1;117,58.7,4.1;23,58.1,3.5;54,57.7,3.1;22,57.5,2.8;56,57.3,2.7;58,57.5,2.9;1,57.4,2.7;17,57,2.4
+hwei:赫威:54.7:21,57.9,3.2;1,58.1,3.5;6,57.9,3.2;19,57.1,2.4;53,57,2.4;9,57.1,2.4;43,57,2.3;37,56.8,2.1;5,56.8,2.1;38,56.9,2.3;69,56.3,1.7;7,55.9,1.3
+aurelionsol:翱銳龍獸:54.6:15,59.7,5;4,59.4,4.8;7,58.7,4.1;43,58.1,3.5;21,56.9,2.3;69,56.9,2.3;37,56.7,2.1;31,56.7,2;38,56.9,2.2;9,56.4,1.7;60,56.2,1.5;64,56.5,1.8
+fiora:菲歐拉:54.6:33,63.8,9.2;25,63.7,9.1;6,61.4,6.8;9,59.9,5.3;49,58.3,3.7;50,58.4,3.8;1,58.3,3.7;71,57.4,2.8;35,57.2,2.7;54,57.1,2.5;20,56.9,2.3;34,56.9,2.4
+kayn:慨影:54.3:9,61,6.7;21,59.8,5.6;6,60.5,6.2;14,58.4,4.2;118,58.4,4.1;49,57.7,3.5;30,57.4,3.1;34,57.6,3.3;31,57.4,3.1;1,57.5,3.3;22,57.2,3;20,57.1,2.8
+viktor:維克特:54.0:19,57.4,3.4;5,57.5,3.5;31,57.4,3.4;6,57.7,3.7;9,57.1,3.1;21,56.8,2.8;48,56.4,2.5;53,56.5,2.6;14,56.5,2.5;70,56.2,2.2;27,56,2.1;37,55.8,1.9
+ekko:艾克:53.7:1,60.1,6.5;59,59.4,5.8;197,58.7,5;48,58,4.4;6,58.4,4.8;125,57.4,3.7;28,56.2,2.6;9,56.4,2.7;14,56.6,3;31,55.8,2.1;44,55.1,1.4;35,55.1,1.4
+teemo:提摩:53.6:59,61.7,8.1;27,58.5,4.9;44,56.4,2.8;43,56.1,2.5;205,55.7,2.1;116,55.7,2.1;6,55.6,2;9,54.9,1.3;132,54.7,1.2;69,54.9,1.3;37,54.6,1;19,54.7,1.1
+seraphine:瑟菈紛:53.5:27,59.8,6.3;37,57,3.5;60,56.4,2.8;9,56.1,2.5;44,55.7,2.1;19,55.2,1.7;6,55.9,2.3;21,55.2,1.6;70,55.1,1.5;43,55.1,1.6;10,55.2,1.6;80,54.5,1
+xinzhao:趙信:53.5:134,61,7.6;29,60.1,6.6;59,57.8,4.3;58,57.9,4.4;1,57.8,4.3;162,57.5,4;22,57.1,3.6;56,56.1,2.6;54,55.9,2.4;39,56,2.5;146,55.9,2.4;23,55.8,2.3
+tahmkench:貪啃奇:53.2:16,60.1,6.9;36,59.2,6;51,58.1,4.9;59,57.9,4.7;5,57.5,4.2;76,55.9,2.7;3,55.9,2.6;9,54.5,1.3;50,54.5,1.2;24,54.2,1;81,54,0.8;38,54.1,0.9
+caitlyn:凱特琳:52.8:0,68.3,15.4;58,56.9,4;14,56.1,3.3;9,55.4,2.6;18,55.1,2.2;74,56.7,3.8;49,54.4,1.6;31,54.5,1.6;21,54.3,1.5;23,54.1,1.3;6,55,2.1;17,54.1,1.3
+briar:布蕾爾:52.8:25,60.4,7.6;5,59,6.1;6,60.3,7.5;76,58.1,5.2;146,58,5.2;46,57.3,4.4;9,57.4,4.5;17,57.2,4.3;34,57.5,4.6;56,57,4.2;49,56.3,3.5;1,56.1,3.3
+janna:珍娜:52.9:10,59.9,7.1;2,59.1,6.3;37,58.1,5.3;27,56.8,4;12,56.3,3.4;8,56.2,3.3;6,57.3,4.4;93,55.3,2.5;112,54.8,1.9;61,53.7,0.8;66,53.6,0.7;9,54,1.2
+ambessa:安比薩:52.8:5,61.5,8.7;34,60.6,7.8;118,58.5,5.7;6,59.4,6.6;49,58,5.2;9,57.9,5;31,57.5,4.7;25,57.2,4.4;14,56.9,4;78,56.3,3.4;22,56.3,3.5;21,56.5,3.7
+zaahen:薩亨:52.8:25,60.1,7.3;9,58,5.2;14,58.1,5.3;24,57.2,4.4;3,57.4,4.6;22,56.5,3.7;34,56.9,4;6,58.1,5.2;32,56.2,3.4;101,56.9,4;36,55.2,2.3;35,55.3,2.5
+yunara:尤娜拉:52.8:58,58.9,6.1;0,56.9,4.2;134,56,3.2;45,55.9,3.1;14,56,3.2;18,55.6,2.8;105,56.2,3.5;50,54.9,2.1;84,54.7,1.9;23,54,1.3;65,54.1,1.3;17,54.1,1.3
+sona:索娜:52.7:10,61.3,8.6;27,58.6,5.9;37,58.1,5.3;12,57.8,5.1;6,59.1,6.3;2,57.3,4.6;8,55.6,2.9;132,54.8,2.1;178,54.8,2;80,54.4,1.7;175,54.1,1.4;5,54,1.3
+ryze:雷茲:52.3:99,59.2,6.9;5,57.5,5.2;57,57,4.7;6,57.5,5.2;73,56.4,4.1;29,55.8,3.5;178,55.3,3;9,55.3,3;28,55,2.8;14,54,1.7;116,53.4,1.2;48,53.2,0.9
+ahri:阿璃:52.3:48,56.7,4.4;27,56.7,4.4;9,56.6,4.3;6,57.2,4.9;74,58,5.7;44,55.5,3.1;37,55.1,2.8;21,55.1,2.7;31,54.7,2.4;28,54.6,2.3;14,55.2,2.8;30,54.7,2.4
+zilean:極靈:52.3:161,59,6.7;27,55.2,2.9;37,54.7,2.4;53,54.5,2.2;57,54.1,1.8;6,54.8,2.4;9,53.4,1.1;70,53.2,0.9;93,53.2,0.9;19,53.1,0.8;67,53.4,1.1;44,52.6,0.3
+singed:辛吉德:52.2:1,58.7,6.5;94,57.4,5.3;43,56.4,4.2;111,56.1,3.9;64,56,3.8;38,56.2,4.1;21,55.7,3.5;7,55.3,3.2;141,55.8,3.7;9,55,2.9;22,54.9,2.8;11,54.1,1.9
+rell:銳兒:52.1:3,58.5,6.4;27,56.8,4.7;42,56.1,4;16,55.7,3.5;24,55.3,3.1;38,55.1,2.9;1,54.4,2.3;9,54.3,2.2;108,54.1,1.9;69,54,1.9;32,53.7,1.6;36,53.4,1.2
+alistar:亞歷斯塔:52.0:3,60.2,8.2;42,58.7,6.7;24,57,5;9,56.1,4.1;39,56.1,4.1;16,55.4,3.4;27,55.5,3.4;136,55.4,3.4;108,55.1,3.1;2,55.7,3.7;96,54.7,2.7;51,54.4,2.4
+graves:葛雷夫:51.8:0,64.2,12.4;5,56.6,4.8;14,55.9,4;6,56.2,4.3;34,55.2,3.4;22,54.9,3.1;9,54.9,3;105,55.3,3.4;49,54.4,2.5;25,54.1,2.3;31,53.9,2.1;17,53.8,1.9
+sett:賽特:51.8:16,58.9,7.1;36,58.6,6.8;9,56.9,5.1;24,56.4,4.6;3,56.3,4.5;6,56.7,4.9;76,55.4,3.6;42,55.4,3.6;51,54.9,3.1;32,54.7,2.9;1,54.8,3;14,54.7,2.9
+vayne:汎:51.8:117,57.4,5.6;23,57.3,5.6;35,55.6,3.8;14,54.6,2.8;62,54.1,2.3;9,54.2,2.4;75,53.7,1.9;21,53.5,1.7;20,53.4,1.6;6,54.5,2.7;0,53.1,1.3;54,52.9,1.2
+brand:布蘭德:51.7:11,57.6,5.9;19,55.6,3.8;21,55.4,3.7;43,55.2,3.5;64,55,3.3;7,54.5,2.8;9,54.4,2.7;38,54.3,2.6;22,54.1,2.3;29,53.9,2.1;37,53.5,1.8;47,53.3,1.6
+shyvana:希瓦娜:51.8:27,58.7,6.9;136,56.1,4.4;1,56,4.2;16,55.2,3.4;44,55.2,3.5;178,55.2,3.5;14,55.4,3.7;9,55,3.3;32,54.8,3.1;159,54.5,2.8;3,54.9,3.1;24,54.5,2.7
+malzahar:馬爾札哈:51.7:19,55.8,4.1;43,55.7,4;21,55.4,3.8;9,55.2,3.5;6,55.2,3.6;38,54.7,3;37,54,2.3;11,53.7,2;7,53.6,1.9;70,53.7,2.1;29,53.4,1.8;31,53.6,1.9
+aurora:歐羅拉:51.6:35,56.8,5.2;59,55.9,4.4;5,55.9,4.4;48,55.3,3.7;41,55.3,3.7;9,55,3.5;31,54.6,3.1;29,54.5,2.9;6,55,3.5;34,54.3,2.8;21,54,2.4;28,53.7,2.2
+aphelios:亞菲利歐:51.5:0,64,12.5;14,56.2,4.6;6,56.6,5.1;22,55.4,3.8;46,55.3,3.8;9,55.1,3.6;74,58,6.5;18,54.5,2.9;5,54.8,3.3;49,54.1,2.5;71,53.8,2.2;21,53.6,2.1
+jinx:吉茵珂絲:51.5:58,56.7,5.3;22,55.3,3.8;14,54.9,3.4;6,55.2,3.8;18,53.9,2.5;9,54,2.5;45,53.4,2;23,53.3,1.8;119,53.5,2.1;84,53,1.6;49,53,1.6;21,53.1,1.6
+yuumi:悠咪:51.5:10,62.5,11;27,57,5.5;6,56.9,5.4;12,55.5,4.1;37,55.1,3.7;8,54,2.5;80,53.9,2.4;61,53.2,1.8;144,53.3,1.9;180,53.3,1.8;2,52.6,1.2;112,52.7,1.2
+shen:慎:51.3:16,58.5,7.2;3,57.4,6.1;36,55,3.7;32,54.9,3.6;51,54.6,3.3;24,54.7,3.4;9,54.5,3.2;42,54.1,2.8;76,54,2.7;69,53.7,2.4;1,53.2,1.8;38,53.4,2
+viego:維爾戈:51.3:59,60.5,9.2;14,59.6,8.3;6,58.9,7.7;1,56,4.8;137,55.5,4.2;150,55.2,4;34,55.8,4.6;31,55.2,3.9;22,54.6,3.4;63,54.7,3.5;46,54.4,3.1;56,54.6,3.3
+corki:庫奇:51.2:0,62.8,11.6;75,55.1,3.9;58,54.8,3.6;31,54.5,3.3;74,56.5,5.3;9,54.5,3.3;137,53.6,2.5;49,53.5,2.3;55,53.4,2.2;25,53.6,2.4;71,52.7,1.5;17,52.7,1.5
+milio:米里歐:51.2:10,62.6,11.4;37,56.5,5.3;27,56.7,5.5;2,56.3,5.1;8,54.5,3.3;6,55.9,4.6;12,53.8,2.5;61,52.9,1.7;80,52.7,1.5;9,53.2,1.9;66,51.8,0.6;19,52,0.8
+sion:賽恩:50.9:3,60.3,9.4;16,59.3,8.3;42,57.9,7;36,56.2,5.3;24,55.6,4.7;32,54.9,4;69,55.1,4.2;9,54.8,3.8;1,54.1,3.2;38,53.3,2.4;6,53.2,2.3;167,51.7,0.8
+jax:賈克斯:50.9:1,57.1,6.2;33,56,5;22,55.2,4.3;136,55.2,4.3;25,54.6,3.7;74,55.3,4.3;9,54.4,3.4;32,53.9,3;3,54.4,3.5;75,53.7,2.8;58,53.7,2.8;34,53.6,2.7
+missfortune:好運姐:50.8:159,54.8,4;124,54.4,3.6;19,54.5,3.7;9,54.4,3.7;27,54.1,3.3;60,53.5,2.7;6,54,3.2;37,53.3,2.5;43,53.5,2.7;0,53.5,2.7;7,53,2.2;58,53.1,2.3
+smolder:史矛德:50.8:137,57.5,6.7;4,56.2,5.4;9,56.1,5.3;6,54.5,3.8;5,53.8,3;21,53.5,2.8;19,53.3,2.5;55,52.9,2.1;31,52.7,2;27,52.6,1.8;37,52.5,1.7;90,52.5,1.7
+syndra:星朵拉:50.8:5,57.2,6.5;9,55.3,4.6;19,55.2,4.4;27,55,4.3;70,55.1,4.4;47,54.7,3.9;44,54,3.2;6,54.7,3.9;21,53.6,2.8;41,53.8,3;37,52.9,2.1;31,52.9,2.1
+renata:睿娜妲‧格萊斯克:50.7:6,59.1,8.4;10,56.5,5.8;2,55.2,4.4;27,55.2,4.4;8,54.9,4.1;37,54.6,3.8;19,53.1,2.4;9,53.4,2.7;112,52.8,2;70,52.5,1.8;93,52.4,1.6;80,52,1.3
+heimerdinger:漢默丁格:50.7:29,54.5,3.8;43,54,3.3;48,53.9,3.2;6,54.3,3.6;91,53.3,2.6;19,53.4,2.7;21,53.3,2.6;37,52.8,2.1;9,52.9,2.2;5,52.7,2;53,52.3,1.7;38,52.6,1.9
+trundle:特朗德:50.5:40,57.5,6.9;25,56.1,5.6;6,56.1,5.6;32,54.9,4.3;37,54.2,3.7;3,54.5,4;27,54.2,3.6;85,53.4,2.9;9,53.1,2.5;132,52.6,2.1;69,52.4,1.9;43,52.4,1.9
+velkoz:威寇茲:50.5:19,54.1,3.5;197,53.9,3.3;21,53.6,3.1;27,53.3,2.8;9,53.2,2.7;5,53.5,2.9;6,53.6,3.1;37,52.6,2.1;60,52.4,1.8;70,52.1,1.6;47,51.9,1.4;38,51.9,1.4
+poppy:波比:50.5:3,58.5,8;42,56.5,6.1;16,55.7,5.2;38,55,4.6;24,54.3,3.8;1,53,2.5;36,52.8,2.3;32,52.7,2.2;69,52.9,2.4;142,52.8,2.3;51,52.4,1.9;6,54,3.5
+gangplank:剛普朗克:50.4:5,57.1,6.7;6,55.4,5;18,54.3,3.9;9,54,3.5;46,53.3,2.9;55,53.2,2.8;22,53.3,2.9;21,53.3,2.8;14,53,2.6;31,52.4,2;17,52.3,1.9;49,52.2,1.7
+zyra:枷蘿:50.4:6,55.1,4.6;19,53.6,3.2;27,53.6,3.1;37,53.2,2.8;43,53.3,2.9;9,52.9,2.5;21,52.7,2.2;60,52.3,1.9;91,51.7,1.2;29,51.6,1.2;44,51.5,1.1;11,51.5,1
+galio:加里歐:50.4:3,56,5.7;5,55.4,5;27,55.4,5;1,54.8,4.5;9,54.3,3.9;16,53.7,3.3;32,53.1,2.7;24,52.8,2.4;14,53.2,2.8;22,52.5,2.1;175,52.4,2;42,52.3,1.9
+lucian:路西恩:50.4:55,56.5,6.1;137,56.2,5.8;9,55.4,5;14,55.5,5.1;0,54.7,4.3;31,54.3,3.9;6,54.8,4.4;58,54.1,3.7;22,53.6,3.2;46,53.6,3.2;21,52.7,2.3;18,52.6,2.2
+kassadin:卡薩丁:50.4:1,61.4,11;57,56.4,6;75,55.5,5.1;14,54.8,4.4;28,53.5,3.1;180,53,2.6;22,53.1,2.7;31,52.9,2.5;20,52.8,2.4;185,52.6,2.2;48,52.8,2.4;99,52.5,2.1
+swain:斯溫:50.3:3,56.8,6.4;39,55.3,4.9;64,54.9,4.5;27,54.5,4.1;37,54.2,3.8;9,53.2,2.8;16,52.8,2.4;32,52.8,2.4;38,53.3,2.9;5,53.2,2.8;127,51.8,1.4;53,51.8,1.5
+veigar:維迦:50.2:5,55.9,5.7;47,55.3,5.1;6,55.8,5.6;44,54.9,4.7;4,54.6,4.4;9,54.3,4.1;19,54,3.8;70,53.6,3.4;125,53.4,3.2;28,53.2,3;27,53,2.8;21,53,2.8
+nilah:淣菈:50.3:5,59.1,8.8;137,57.8,7.5;6,60.9,10.6;14,57.8,7.5;56,55.8,5.5;58,56.2,5.9;1,56.2,5.9;17,54.8,4.5;50,55.1,4.8;49,54.5,4.1;18,54.1,3.8;9,55.1,4.8
+ivern:埃爾文:50.2:10,59,8.8;6,59.7,9.5;2,57,6.7;37,56.6,6.3;12,56,5.8;8,55.4,5.1;27,55,4.8;5,54.5,4.3;9,54.3,4;144,53,2.8;66,52.4,2.1;53,53,2.8
+thresh:瑟雷西:50.1:3,54,3.9;38,53.7,3.6;37,53.3,3.2;53,53.1,3;9,52.9,2.8;22,52.2,2.1;5,52.2,2.1;51,51.7,1.6;14,52.3,2.2;16,51.6,1.5;32,51.6,1.5;6,52.8,2.8
+rumble:藍寶:50.0:1,61,11;31,54.6,4.6;43,53.2,3.1;21,53.3,3.2;14,53.5,3.4;9,52.9,2.8;28,52.6,2.5;48,52.6,2.6;27,52.7,2.6;22,52.5,2.5;38,52.6,2.6;64,52.2,2.1
+reksai:雷珂煞:50.2:39,59.5,9.3;3,58.8,8.6;24,57.4,7.2;42,57,6.8;16,56.5,6.3;6,58.8,8.6;32,54.9,4.7;51,54.4,4.3;36,54.5,4.4;9,54.6,4.4;76,53.9,3.7;10,55.9,5.7
+kalista:克黎思妲:50.1:20,54.6,4.6;22,54.7,4.6;23,53.9,3.9;35,53.6,3.6;34,53.6,3.5;68,53.5,3.5;14,53.4,3.4;18,52.8,2.8;21,52,2;65,51.6,1.6;84,51.6,1.6;54,51.6,1.6
+volibear:弗力貝爾:49.8:33,64.2,14.4;27,55,5.2;3,54.9,5.1;5,54.9,5;16,53.5,3.7;9,53.6,3.7;146,53.7,3.9;22,53.2,3.4;32,53.1,3.2;59,52.9,3.1;24,52.8,3;134,52.4,2.6
+tryndamere:泰達米爾:49.7:25,57.2,7.5;85,56.5,6.7;58,56,6.2;23,55.6,5.9;14,55.3,5.5;6,55.4,5.6;65,53.5,3.8;1,53.5,3.7;46,53.2,3.5;9,53.2,3.5;120,52.8,3;117,52.8,3.1
+talon:塔隆:49.6:1,55.1,5.5;9,54.9,5.3;46,54.3,4.7;6,55.3,5.7;75,53.8,4.2;31,53.4,3.8;14,53.4,3.8;25,52.6,3;49,52.5,2.9;22,52,2.4;54,51.9,2.3;50,51.4,1.8
+maokai:茂凱:49.5:3,55,5.5;1,53.8,4.3;27,53.8,4.3;16,53,3.5;64,53,3.5;24,52.3,2.8;42,52.3,2.8;96,52.3,2.8;9,52.3,2.8;37,52,2.5;108,52,2.5;114,51.7,2.2
+zed:劫:49.5:1,55.3,5.9;9,55,5.5;31,54.5,5.1;6,55,5.5;46,53.1,3.7;118,53.6,4.2;25,53,3.6;75,52.8,3.4;14,52.8,3.3;22,52.4,2.9;34,52.5,3;78,51.9,2.4
+soraka:索拉卡:49.5:10,58.2,8.7;2,53.9,4.4;12,53.5,4;37,52.5,3.1;145,51.8,2.3;8,51.2,1.7;112,51.5,2;171,50.5,1.1;27,50.4,1;6,51.3,1.8;88,49.9,0.5;39,49.8,0.4
+nami:娜米:49.5:10,56.4,7;6,57.5,8;37,55.1,5.6;27,53.5,4;2,52.7,3.2;8,52.6,3.1;48,52.5,3;9,51.6,2.1;19,51,1.5;112,51.2,1.7;54,50.5,1;80,50.4,0.9
+draven:達瑞文:49.4:0,58.4,9;30,57.5,8.1;6,56.8,7.4;14,53.9,4.5;9,53.6,4.2;25,53.2,3.8;49,52.4,3;31,52.4,3;58,52,2.6;63,51.8,2.4;137,51.1,1.7;21,50.8,1.4
+taric:塔里克:49.5:27,57.3,7.8;3,56.8,7.3;10,55,5.6;92,54.2,4.8;9,53.9,4.5;2,53.4,3.9;39,52.5,3;42,52.1,2.6;80,52.1,2.6;24,52,2.5;6,55.5,6;37,52.2,2.7
+drmundo:蒙多醫生:49.4:39,62.1,12.7;36,55.9,6.5;16,55.6,6.2;9,53.6,4.2;51,52.8,3.4;3,52.7,3.4;32,51.8,2.4;72,51.6,2.2;76,51.4,2;22,51.3,1.9;81,51.2,1.9;6,51.8,2.4
+vex:薇可絲:49.4:5,55.7,6.2;6,54.4,4.9;38,53.2,3.8;31,52.5,3.1;21,52.3,2.9;79,52.9,3.4;29,51.9,2.5;48,51.9,2.5;47,51.9,2.5;9,51.8,2.4;19,51.6,2.2;166,53.5,4
+fizz:飛斯:49.3:1,61.2,11.8;48,54.4,5.1;47,53.8,4.4;31,53.5,4.1;5,52.8,3.5;46,52.8,3.4;28,52.3,2.9;34,52.3,3;29,52.1,2.8;44,51.9,2.6;9,52,2.7;22,51.6,2.3
+kogmaw:寇格魔:49.3:5,54.8,5.5;1,54.6,5.3;58,53.1,3.8;21,51.9,2.6;19,52,2.7;47,52.3,3;23,51.4,2.1;75,51.5,2.2;38,51.7,2.4;31,51,1.7;9,51.1,1.8;157,50.8,1.5
+xayah:剎雅:49.2:14,55.8,6.6;9,54.5,5.2;6,55.3,6.1;5,54.2,5;58,53.6,4.4;0,53.3,4.1;22,53,3.8;63,53.4,4.1;49,51.9,2.7;18,51.8,2.6;23,51.6,2.4;74,54.8,5.5
+pantheon:潘森:49.2:25,55,5.8;16,54.9,5.7;3,54.5,5.3;9,54,4.8;32,53.8,4.6;46,53.7,4.5;36,53.2,4;24,53.5,4.3;6,53.9,4.7;31,52.7,3.5;1,52.8,3.6;76,52.3,3.1
+lulu:露璐:49.1:10,58,9;6,58.3,9.2;37,55.3,6.2;2,54.5,5.5;8,53.7,4.6;27,53.7,4.7;12,52.7,3.7;112,51.7,2.6;9,51.7,2.6;80,51.1,2;19,51.1,2;144,50.9,1.9
+nasus:納瑟斯:48.9:62,55,6.1;27,54.4,5.5;9,53.8,4.9;21,52.8,3.9;22,52.5,3.6;159,52.3,3.4;64,52.5,3.6;37,51.9,3;6,52.7,3.8;4,51.6,2.7;75,51.5,2.6;1,51.5,2.5
+tristana:崔絲塔娜:48.9:0,56.4,7.5;23,53.7,4.8;14,53.1,4.2;58,52.2,3.3;9,52,3.1;18,51.5,2.6;45,51.5,2.6;63,51.5,2.6;49,51.1,2.2;50,51.3,2.4;19,51,2.1;71,50.7,1.8
+monkeyking:悟空:48.9:25,55.1,6.2;3,55.4,6.6;9,54,5.2;1,53.4,4.5;16,52.7,3.9;32,52.4,3.5;24,52.3,3.5;36,51.9,3.1;46,51.9,3;22,51.8,3;34,51.9,3;14,51.5,2.6
+katarina:卡特蓮娜:48.8:59,56.4,7.6;46,56.5,7.7;1,56.2,7.4;25,53.5,4.7;69,53.3,4.5;75,52.8,4;22,52.7,3.9;150,51.9,3.1;180,51.8,3;30,51.1,2.3;31,50.9,2.1;50,50.9,2.1
+leona:雷歐娜:48.8:3,53.6,4.8;42,53,4.3;1,52.1,3.3;69,52,3.2;16,51.7,3;32,51.4,2.6;114,51.2,2.4;24,51.2,2.4;9,51.1,2.3;36,50.1,1.3;22,50.2,1.4;81,50,1.3
+amumu:阿姆姆:48.7:1,56.9,8.1;3,55.4,6.7;64,54.4,5.6;11,53.1,4.4;42,52.9,4.2;105,53.6,4.9;69,52.3,3.6;24,52.1,3.3;16,51.3,2.6;22,51.4,2.7;26,51.2,2.5;43,51.3,2.6
+annie:安妮:48.8:27,54.8,6;44,52.8,4;48,51.8,3;19,51.7,2.9;7,51.4,2.7;53,51.9,3.1;31,51.4,2.7;37,51.3,2.5;28,51.1,2.4;29,51,2.3;11,51.1,2.4;21,51.3,2.5
+jhin:燼:48.6:58,53.1,4.5;46,52.6,4;60,52.2,3.6;38,51.9,3.3;116,51.6,3;6,52,3.4;22,51.4,2.8;0,51.1,2.5;31,51.1,2.5;5,50.7,2;67,51.1,2.5;21,50.4,1.8
+xerath:齊勒斯:48.6:60,52.2,3.6;19,51.7,3.1;31,51.4,2.8;21,51.2,2.6;79,51,2.4;9,50.7,2.1;29,50.4,1.8;6,51.1,2.5;47,50.3,1.7;37,49.9,1.3;38,50.1,1.5;70,49.9,1.3
+sylas:賽勒斯:48.5:1,57.1,8.6;5,55.2,6.7;3,55.3,6.7;48,53.6,5.1;83,52.9,4.4;24,52.6,4.1;22,51.7,3.1;32,51.7,3.1;9,51.6,3.1;34,51.5,3;16,51.4,2.9;42,50.9,2.3
+fiddlesticks:費德提克:48.5:1,59.8,11.3;46,52.5,3.9;38,53,4.4;21,52,3.5;102,51.8,3.3;31,51.5,2.9;22,51.4,2.8;94,51,2.5;48,51.1,2.6;160,52.6,4;14,51.7,3.2;19,51.3,2.8
+nautilus:納帝魯斯:48.5:3,54.5,6;1,52,3.5;42,51.8,3.3;26,51.3,2.7;9,51.3,2.8;24,51.1,2.6;108,51.1,2.6;16,50.7,2.2;96,50.4,1.9;22,50.4,1.9;32,50.2,1.7;69,50.5,1.9
+udyr:烏迪爾:48.5:1,60.5,12;46,52.2,3.7;31,52,3.5;102,52.1,3.5;75,51.8,3.2;43,51.6,3.1;29,51.5,2.9;59,51.3,2.8;177,51.3,2.8;121,51.2,2.7;69,51.3,2.8;180,51.1,2.6
+ornn:鄂爾:48.5:3,55.6,7.1;42,51.5,3;16,51.4,2.9;51,51,2.5;24,50.8,2.3;6,52.7,4.2;38,51.3,2.8;81,50.7,2.2;1,50.6,2.1;22,50.3,1.8;69,50.2,1.7;32,50,1.5
+ziggs:希格斯:48.5:19,52.2,3.7;6,52.6,4.1;9,51.4,2.9;38,51.6,3.1;27,51.1,2.6;21,51.2,2.7;60,50.6,2.1;37,50.3,1.8;43,50.4,1.9;53,50.2,1.7;44,49.6,1.1;70,49.7,1.2
+nocturne:夜曲:48.5:25,58.3,9.8;1,56.8,8.3;46,55,6.5;14,53.1,4.6;31,52.4,3.9;102,52.4,3.9;9,52.5,4;22,51.9,3.4;121,51.8,3.3;78,51.8,3.3;36,51.7,3.1;58,51.6,3.1
+twitch:圖奇:48.5:58,56.7,8.2;0,56.2,7.7;23,53.3,4.8;9,52.7,4.2;14,52.3,3.9;45,51.9,3.4;46,52.2,3.7;22,51.7,3.2;49,51.4,3;21,51.1,2.7;31,50.9,2.5;71,50.7,2.2
+karthus:卡爾瑟斯:48.4:1,59.8,11.4;160,54.9,6.5;46,52.4,4;43,52.3,3.9;29,51.9,3.6;7,51.5,3.1;69,51.6,3.2;121,51.4,3;31,51.4,3;74,51.1,2.7;79,51.2,2.8;5,51.2,2.8
+lux:拉克絲:48.4:6,53.1,4.7;19,51,2.6;37,50.8,2.4;27,50.7,2.3;48,50.7,2.3;9,50.7,2.3;8,50.7,2.3;60,50.1,1.7;21,50.3,1.9;38,50,1.6;44,49.4,1.1;31,49.3,0.9
+gragas:古拉格斯:48.4:1,54.8,6.4;21,52.9,4.6;3,52.8,4.4;6,53.4,5;9,52.3,3.9;31,51.4,3.1;48,51.2,2.9;27,51.1,2.7;22,50.9,2.6;37,50.8,2.4;44,50.8,2.4;5,50.9,2.6
+kled:克雷德:48.4:16,56.3,7.9;32,53.6,5.2;24,53.5,5.1;42,52.9,4.4;51,51.9,3.4;25,51.9,3.5;36,51.9,3.4;3,52.5,4;69,51.9,3.5;1,51.9,3.5;9,51.4,2.9;50,50.7,2.3
+skarner:史加納:48.3:3,54.5,6.2;64,52.9,4.6;16,51.7,3.4;5,51.5,3.2;42,51.3,3;1,51.3,3.1;24,51.1,2.8;43,51.4,3.1;53,51.3,3;9,50.9,2.6;69,50.7,2.4;51,49.7,1.4
+taliyah:塔莉雅:48.3:5,54.3,6;6,54,5.7;21,52.1,3.8;19,51.9,3.6;31,51.7,3.5;9,51.4,3.1;28,50.9,2.7;47,50.9,2.7;48,50.6,2.4;70,50.6,2.4;68,50.3,2.1;53,50.2,2
+sejuani:史瓦妮:48.2:3,54.3,6;16,52.5,4.3;36,51.5,3.3;1,51.6,3.4;38,52,3.8;51,50.9,2.7;42,50.7,2.5;69,50.9,2.7;32,50.5,2.3;9,50.7,2.5;24,50.4,2.2;22,50.2,2
+rengar:雷葛爾:48.2:25,56.3,8.1;1,55.8,7.6;46,55.2,7;9,54.4,6.2;6,53.7,5.5;49,52,3.8;78,51.4,3.2;31,51.2,3;22,51.1,2.9;36,51,2.8;18,50.7,2.5;71,50.7,2.5
+zeri:婕莉:48.0:105,61,13;22,52.5,4.5;6,54.3,6.3;14,52.6,4.6;18,52,4;58,51.9,3.9;63,51.9,3.9;75,51.3,3.2;9,51.7,3.7;38,52.2,4.1;21,50.9,2.9;45,50.8,2.7
+azir:阿祈爾:48.0:0,54.1,6.1;29,53.1,5.1;28,52.6,4.6;83,52.3,4.3;48,52.5,4.5;47,52.7,4.7;14,52.4,4.4;5,51.7,3.7;38,52.3,4.4;22,51.8,3.9;101,52.7,4.7;21,51.2,3.2
+illaoi:伊羅旖:47.9:9,53.2,5.4;16,53,5.1;3,52.7,4.8;36,52,4.2;24,51.9,4;14,51.6,3.7;51,50.1,2.3;22,50,2.2;27,49.8,1.9;32,49.3,1.4;38,50,2.2;148,49.2,1.3
+karma:卡瑪:47.8:2,54.9,7.1;27,54.9,7;10,54.6,6.8;37,53.1,5.2;12,52.9,5.1;8,52.5,4.7;9,51.3,3.5;80,49.8,2;112,50.2,2.4;44,49.7,1.9;19,49.8,2;136,49.7,1.9
+senna:姍娜:47.8:2,56.9,9.2;4,55.8,8.1;10,54.1,6.3;14,52.7,4.9;58,52.5,4.7;103,52,4.2;6,52.4,4.7;9,51.7,4;19,51.3,3.6;37,50.5,2.7;25,50.5,2.7;92,50.6,2.8
+evelynn:伊芙琳:47.8:1,58.7,10.9;31,53.4,5.6;29,52.4,4.5;129,52.2,4.4;48,52.1,4.3;9,51.7,3.9;21,51.1,3.3;46,51,3.1;35,50.8,3;50,50.2,2.4;19,50,2.2;28,49.5,1.7
+darius:達瑞斯:47.7:3,53.5,5.9;9,53.1,5.4;24,51.8,4.2;16,51.3,3.7;22,51.2,3.5;1,51.3,3.6;39,51.2,3.5;36,50.7,3.1;26,50.7,3;42,50.6,3;32,50.2,2.5;38,50.6,2.9
+vladimir:弗拉迪米爾:47.6:5,55.3,7.7;48,54.6,7;9,54.2,6.5;21,51.8,4.2;76,51.7,4;29,51.2,3.6;44,51.1,3.5;111,51.1,3.5;101,51.1,3.5;14,51,3.4;27,50.7,3.1;16,50.3,2.7
+quinn:葵恩:47.6:46,53.5,5.9;23,51.6,4;14,52.4,4.8;22,51.5,3.9;9,51.8,4.2;18,51.2,3.5;58,51,3.4;31,50.8,3.1;45,50.2,2.6;17,50.3,2.7;63,50.6,3;25,50.2,2.6
+samira:煞蜜拉:47.5:0,65.7,18.2;22,52.2,4.7;74,53.3,5.7;1,52.4,4.8;46,51.8,4.3;18,50.4,2.8;49,50.3,2.8;50,50.4,2.9;6,51.8,4.2;17,50,2.4;31,49.8,2.2;63,49.9,2.3
+kindred:鏡爪:47.4:14,52.4,5;9,52.3,5;23,51.5,4.1;6,52.7,5.4;45,50.4,3.1;22,50.5,3.1;58,50.3,2.9;18,49.8,2.4;21,49.8,2.4;5,49.8,2.5;35,49.4,2.1;50,49.5,2.2
+orianna:奧莉安娜:47.3:6,53.2,5.9;9,52.2,5;27,51.9,4.6;48,50.8,3.6;44,50.4,3.1;37,50.3,3;19,50.4,3.2;21,50.1,2.9;28,49.5,2.3;8,50.1,2.8;57,49.6,2.4;5,50,2.7
+diana:黛安娜:47.3:3,57.4,10.1;1,56.9,9.6;16,55.4,8.2;24,55,7.7;32,53.8,6.5;42,53.5,6.3;59,53.1,5.8;162,52.1,4.9;105,52.7,5.5;36,51.6,4.4;76,51.2,3.9;74,51.6,4.4
+khazix:卡力斯:47.2:5,53.4,6.2;9,52.3,5.1;1,52,4.8;31,51.6,4.4;6,52.2,5;22,50.6,3.4;25,50.3,3.1;14,50.4,3.2;53,50.5,3.3;46,49.6,2.4;50,49.5,2.3;75,49.5,2.3
+sivir:希維爾:47.2:58,54.4,7.2;14,52.2,5;6,52.7,5.5;9,51.8,4.6;18,50.3,3.1;49,49.6,2.4;50,49.5,2.3;71,49.3,2.1;45,49,1.8;21,49.1,1.9;56,49,1.8;106,48.7,1.5
+elise:伊莉絲:47.3:1,56.7,9.4;31,51.1,3.8;6,53,5.7;22,50.8,3.5;74,53.1,5.8;28,49.9,2.6;67,51.3,4;21,50.4,3.1;101,50.3,3;75,49.9,2.6;63,49.9,2.6;50,49.3,2
+chogath:科加斯:47.1:3,56.5,9.4;24,51.3,4.1;16,50.5,3.4;38,50.5,3.4;42,49.8,2.6;51,49.5,2.4;9,49.6,2.4;36,49.5,2.3;32,49.4,2.3;14,49.4,2.3;53,49.2,2.1;1,49.1,1.9
+zoe:柔依:47.2:129,52.8,5.6;152,51.3,4.2;31,49.9,2.7;191,49.4,2.2;38,50,2.9;67,50.1,3;9,49.3,2.2;21,49.2,2.1;28,48.9,1.7;22,49,1.9;19,48.9,1.8;135,48.8,1.7
+gnar:吶兒:47.1:3,53.1,6;32,52,5;16,51.1,4.1;38,51.4,4.4;36,50.5,3.5;51,50.1,3.1;1,50.1,3;22,49.8,2.8;6,51.1,4;24,49,2;23,48.8,1.8;9,48.8,1.8
+malphite:墨菲特:47.0:1,57.7,10.7;3,56.8,9.8;24,52.8,5.8;42,52.6,5.6;16,51.2,4.3;32,50.9,3.9;9,49.7,2.8;36,49.5,2.5;22,49.5,2.5;105,50.2,3.2;176,49.3,2.3;6,50.1,3.1
+mel:梅爾:46.9:5,50.6,3.6;9,50.3,3.4;27,49.7,2.7;19,49.5,2.5;21,49.5,2.5;67,49.9,3;6,49.9,3;0,50.4,3.5;28,48.8,1.9;31,48.9,2;47,48.9,1.9;7,48.6,1.6
+warwick:沃維克:46.8:25,54,7.2;32,52.4,5.6;3,52.5,5.6;39,51,4.2;150,51.3,4.4;146,50.6,3.8;22,50.1,3.3;9,50.1,3.2;117,50.3,3.4;42,49.8,2.9;69,49.8,3;14,50.3,3.5
+nidalee:奈德麗:46.8:125,54.5,7.7;6,51.7,4.9;67,51.4,4.6;31,49.7,2.9;8,49.8,3;37,49.3,2.5;27,48.7,2;9,48.3,1.5;38,48.5,1.8;19,48,1.2;48,48,1.2;22,48,1.2
+jarvaniv:嘉文四世:46.7:3,54.4,7.7;25,52.6,5.8;1,52.4,5.6;16,52.3,5.5;24,52.1,5.4;32,51.9,5.2;9,51.4,4.6;36,50.8,4.1;46,50.6,3.8;42,50.6,3.9;51,49.9,3.2;6,50.8,4.1
+ezreal:伊澤瑞爾:46.7:0,58.3,11.6;90,50,3.3;9,49.7,3;6,50.2,3.5;21,49.7,3;57,49.5,2.8;58,49.2,2.5;31,48.9,2.2;27,48.8,2.1;5,48.4,1.7;38,48.6,1.9;25,48.3,1.6
+mordekaiser:魔鬥凱薩:46.7:1,52.9,6.2;3,51.8,5.1;7,50.8,4.1;43,49.8,3.1;105,50,3.3;38,50,3.3;24,49.4,2.7;64,49.8,3.1;9,49.4,2.7;42,49.1,2.4;22,49.1,2.4;29,49.1,2.4
+irelia:伊瑞莉雅:46.7:25,56.4,9.7;32,52.4,5.7;78,51.4,4.7;33,50.9,4.2;22,50,3.3;16,49.2,2.5;9,49.6,2.8;75,49.4,2.7;36,49.2,2.5;20,48.8,2.1;34,48.9,2.2;49,48.9,2.2
+varus:法洛士:46.6:0,57.7,11.1;58,51,4.4;9,50.3,3.6;19,50,3.3;6,50.5,3.9;23,49.7,3.1;21,49.8,3.2;18,48.9,2.3;28,48.7,2.1;17,48.9,2.3;38,49.1,2.4;25,48.9,2.3
+riven:雷玟:46.6:9,52.1,5.5;118,51.9,5.3;49,51,4.4;14,51.9,5.2;6,52.8,6.2;1,51.2,4.5;34,50.7,4.1;35,50.6,4;50,50.7,4;20,50.3,3.6;31,50.4,3.8;27,50.1,3.5
+shaco:薩科:46.5:44,56.8,10.3;93,55.5,9;27,53.8,7.3;132,53.7,7.2;7,53.2,6.7;37,52.5,5.9;91,52.4,5.8;43,52.7,6.2;108,52.6,6.1;11,52.1,5.6;29,51.8,5.3;6,52.4,5.9
+qiyana:姬亞娜:46.5:178,56.8,10.3;57,53.1,6.6;5,51.8,5.3;34,51.6,5;20,51.1,4.6;1,51.3,4.8;31,50.5,4;9,50.7,4.2;6,51.8,5.3;53,50.3,3.8;74,50.2,3.7;35,49,2.5
+akshan:埃可尚:46.5:117,50.7,4.2;23,50.6,4.1;45,49.7,3.2;6,51.5,5;22,49.3,2.8;46,49,2.5;115,48.6,2.1;19,48.6,2.1;21,48.1,1.6;50,48.1,1.7;17,47.8,1.3;18,47.6,1.1
+pyke:派克:46.4:1,50.3,4;34,49.3,3;9,49.2,2.9;129,49,2.6;35,48.8,2.5;6,49.9,3.5;27,48.9,2.5;46,48.8,2.4;14,49.3,2.9;38,48.9,2.5;22,48.2,1.8;171,48.4,2
+bard:巴德:46.5:48,54.2,7.7;103,52.2,5.7;5,51.8,5.3;6,52.3,5.9;140,50.6,4.1;83,50,3.5;2,50.7,4.2;99,49.6,3.2;29,49.5,3;22,49.2,2.7;8,49.1,2.6;56,48.5,2
+olaf:歐拉夫:46.3:25,54.2,7.9;1,52.2,6;9,51.8,5.6;75,50.6,4.3;160,53.9,7.6;22,50.4,4.1;46,50.1,3.9;54,49.4,3.1;21,49.6,3.4;74,50.4,4.1;58,49.2,2.9;32,48.7,2.5
+rakan:銳空:46.3:3,52.6,6.3;1,51.9,5.6;27,51.6,5.3;42,49.2,2.9;136,49.2,2.9;35,48.7,2.5;34,48.4,2.1;158,48.3,2;37,48.3,2.1;2,48.6,2.3;22,48.1,1.8;38,49.6,3.3
+jayce:杰西:46.1:75,51.1,5;6,51.4,5.2;9,50.5,4.4;31,50.4,4.3;22,48.9,2.8;132,48.6,2.4;1,48.3,2.2;38,48.4,2.2;54,47.9,1.8;25,47.8,1.7;27,47.7,1.6;58,47.9,1.7
+camille:卡蜜兒:46.2:25,51.4,5.3;1,51,4.8;22,50.1,3.9;90,49.4,3.2;9,49.6,3.4;46,49,2.9;50,48.9,2.8;5,48.8,2.6;32,49,2.9;36,48.3,2.1;49,48,1.8;69,48.4,2.2
+garen:蓋倫:46.0:3,52,6;5,51,5;1,50.9,5;9,50.5,4.5;46,50.1,4.1;42,49.4,3.5;14,49.6,3.6;6,50.1,4.1;25,49.1,3.1;21,49,3.1;31,49,3.1;74,49.6,3.6
+kaisa:凱莎:46.0:6,51,5.1;5,50.1,4.2;58,49.8,3.8;31,48.5,2.5;22,48.3,2.3;14,48.3,2.4;28,48.1,2.1;9,48,2;38,48.2,2.2;23,47.8,1.8;21,47.8,1.8;48,47.7,1.7
+cassiopeia:卡莎碧雅:46.0:9,50.8,4.8;11,49.7,3.7;21,49.7,3.7;116,49.3,3.3;29,49.1,3.1;22,49.7,3.7;43,49.3,3.3;19,49.4,3.4;6,50.2,4.2;64,49.5,3.5;98,48,2;37,47.9,1.9
+urgot:烏爾加特:45.7:0,54.9,9.2;32,51.4,5.7;105,51.9,6.2;16,49.9,4.1;141,50,4.3;3,49.5,3.8;22,48.9,3.2;1,49,3.3;36,48.6,2.8;9,48.7,2.9;146,48.3,2.5;84,48.2,2.4
+blitzcrank:布里茨:45.7:1,52.5,6.8;3,49.5,3.8;27,49,3.3;9,48,2.3;37,47.8,2.1;38,48.3,2.6;22,47.6,1.9;136,47.6,1.9;72,47.4,1.7;46,47.5,1.8;102,47.3,1.7;75,47.5,1.9
+aatrox:厄薩斯:45.6:24,52.1,6.5;3,51.6,6;16,50.5,4.9;9,50.2,4.6;96,50.1,4.5;6,50.9,5.2;14,49.4,3.8;93,48.8,3.2;32,48.9,3.3;36,48.8,3.2;42,49,3.4;22,48.5,2.9
+neeko:妮可:45.6:1,54,8.3;48,48.8,3.1;102,48.8,3.2;47,48.3,2.7;46,48.1,2.5;19,48.2,2.6;9,48.3,2.6;22,47.8,2.2;129,47.5,1.9;13,47.2,1.6;27,47.1,1.5;199,48.9,3.2
+braum:布郎姆:45.5:1,50.3,4.8;3,50.2,4.6;38,50.8,5.3;141,50,4.4;69,49.2,3.6;42,48.6,3.1;51,47.8,2.3;37,48.2,2.7;9,48,2.5;81,47.8,2.2;32,47.6,2.1;22,47.7,2.2
+vi:菲艾:45.4:24,52.7,7.3;3,52.9,7.4;42,51.3,5.9;36,50.9,5.4;16,50.8,5.4;9,50.7,5.3;117,50.4,5;32,50.3,4.9;25,49.9,4.5;76,49.7,4.2;59,49.2,3.8;14,49.9,4.4
+nunu:努努和威朗普:45.4:1,56.5,11.1;3,55.2,9.8;42,51.9,6.5;24,51.8,6.4;102,49.1,3.7;16,48.9,3.5;48,48.6,3.2;32,48.3,2.9;162,48.3,2.9;9,48.1,2.7;101,48.4,3;22,47.9,2.5
+anivia:艾妮維亞:45.4:180,49.7,4.4;21,49.6,4.2;38,49.6,4.3;67,49.4,4.1;75,48.5,3.1;19,48.3,2.9;53,48.3,2.9;57,47.7,2.4;6,48.6,3.3;43,47.7,2.4;37,46.8,1.4;96,47.1,1.8
+lissandra:麗珊卓:45.3:1,57.4,12.1;6,50.9,5.7;48,49.2,3.9;47,48.6,3.3;9,48.7,3.4;21,48.9,3.6;22,48.4,3.1;31,47.8,2.6;29,47.6,2.3;38,48.5,3.2;129,47.4,2.2;101,47.7,2.5
+zac:札克:45.3:39,56,10.8;3,51.3,6.1;1,50.4,5.1;42,50.3,5.1;24,49.4,4.2;26,48.5,3.3;16,48.1,2.9;69,48.4,3.2;36,47.7,2.4;22,47.6,2.3;51,47.3,2;81,47.3,2
+yorick:約瑞科:45.2:6,53.8,8.6;3,51.3,6.1;9,49.6,4.3;27,49,3.8;32,48.3,3.1;36,48.1,2.9;51,48,2.7;24,48.4,3.2;37,48.4,3.2;16,47.7,2.4;22,47.6,2.4;14,48.5,3.3
+rammus:拉姆斯:45.0:3,51,6;1,50.9,5.9;42,48.9,3.9;14,49.7,4.7;69,49,4;142,48,3;24,47.9,2.9;9,48,3;64,48.8,3.8;22,47.4,2.4;36,47.1,2.1;16,47.1,2
+renekton:雷尼克頓:44.8:105,50.3,5.5;9,49.7,4.9;22,49.4,4.6;27,49.2,4.4;1,49,4.2;78,48.6,3.8;75,48.6,3.8;21,49,4.2;25,48.1,3.3;14,48.9,4.1;26,47.9,3.1;3,48.3,3.5
+kennen:凱能:44.7:1,57.4,12.6;9,49.2,4.4;48,48.7,3.9;46,48.4,3.7;27,48.6,3.8;22,48.6,3.8;44,48,3.2;74,48.4,3.6;47,47.7,2.9;28,47.2,2.5;31,47.1,2.3;19,47.3,2.6
+ashe:艾希:44.5:161,56.5,12;0,50.1,5.6;84,49.8,5.3;18,49.5,5;23,48.6,4.1;77,48.5,4;85,48.5,3.9;65,48.3,3.7;60,48.2,3.6;45,47.9,3.4;21,47.7,3.1;106,47.4,2.9
+leesin:李星:44.1:6,49.7,5.6;9,48,3.9;34,48,3.8;25,47.8,3.6;3,48.2,4.1;1,47.5,3.3;22,47.4,3.2;31,47.2,3;14,47.1,2.9;145,46.4,2.2;50,46.3,2.2;71,46.3,2.1
+naafiri:娜菲芮:44.0:78,49.1,5.1;6,50.5,6.6;1,49.3,5.3;31,48.7,4.8;9,48.8,4.8;34,48.1,4.2;14,47.7,3.7;22,46.8,2.8;46,46.7,2.7;50,46.8,2.8;74,47.8,3.8;49,46.6,2.6
+locke:洛克:43.6:1,57.4,13.8;59,49.3,5.7;5,49.4,5.7;31,48.5,4.9;48,48.5,4.9;14,49.1,5.5;29,47.7,4;46,47.5,3.9;141,47.1,3.4;47,46.8,3.2;22,46.6,3;38,47.4,3.7
+leblanc:勒布朗:43.3:31,47.6,4.3;67,48,4.7;28,47.1,3.8;47,47.1,3.8;48,46.9,3.6;38,47.6,4.3;185,46.9,3.5;75,46.9,3.6;34,46.1,2.8;9,45.9,2.5;6,46.5,3.2;53,45.6,2.3
+akali:阿卡莉:42.9:1,56.1,13.2;74,48.6,5.6;22,47.2,4.3;48,46.8,3.9;6,48.3,5.4;38,47.5,4.6;47,46.8,3.8;31,46.2,3.3;28,45.5,2.6;46,45.3,2.4;102,45.9,3;9,45.5,2.5
+ksante:卡桑帝:41.8:3,48.6,6.8;1,46.7,4.9;42,46.1,4.3;69,45.2,3.4;9,44.8,3;24,44.6,2.8;20,44.4,2.6;158,44.1,2.3;16,43.6,1.8;32,43.6,1.8;81,43.4,1.6;22,43.4,1.6`;
+const CH={},CHL=[];
+CHRAW.split('\n').forEach(l=>{const[s,zh,w,p]=l.split(':');const m=new Map();
+  p.split(';').forEach(e=>{const[i,cw,g]=e.split(',').map(Number);m.set(i,{cw,g})});
+  const c={s,zh,w:+w,m};CH[zh]=c;CH[s]=c;CHL.push(c)});
+const pickOf=a=>st.champ?st.champ.m.get(a.id):null;
+
+function chips(host,opts,key){
+  opts.forEach(([v,label])=>{
+    const b=document.createElement('button');b.className='chip';b.type='button';b.textContent=label;b.dataset.v=v;
+    b.setAttribute('aria-pressed',String(st[key]===v));
+    b.onclick=()=>{st[key]=v;host.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',String(c.dataset.v===v)));render()};
+    host.appendChild(b);
+  });
+}
+chips($('#roles'),[['','全部'],['T','坦克'],['M','法師'],['A','射手／普攻'],['F','鬥士／刺客'],['E','輔助']],'role');
+chips($('#rars'),[['','全部'],['P','稜鏡'],['G','黃金'],['S','白銀']],'rar');
+chips($('#tiers'),[['','全部'],['S','S'],['A','A'],['B','B'],['C','C'],['D','D']],'tier');
+
+function wrBar(v,all){
+  const lo=42,hi=58,c=Math.max(lo,Math.min(hi,v)),pct=(c-lo)/(hi-lo)*100,up=v>=50;
+  const left=up?50:pct,w=Math.abs(pct-50);
+  return `<div class="wr"><span class="num ${up?'up':'dn'}">${v.toFixed(1)}%</span><span class="bar"><i class="${up?'up':'dn'}" style="left:${left}%;width:${w}%"></i></span>${all!=null?`<span class="all">全體 <span class="num">${all.toFixed(1)}%</span></span>`:''}</div>`;
+}
+function rowHTML(a,n){
+  const tags=[],p=pickOf(a);
+  if(p)tags.push(`<span class="tag top">${esc(st.champ.zh)}首選 +${p.g.toFixed(1)}%</span>`);
+  if(a.roles.includes('U'))tags.push('<span class="tag">通用</span>');
+  for(const k of a.roles)if(ROLE[k])tags.push(`<span class="tag">${ROLE[k]}</span>`);
+  if(a.fx.includes('指定技能'))tags.push('<span class="tag">綁定技能</span>');
+  if(a.gone)tags.push('<span class="tag warn">4.0 預計移除</span>');
+  const pinned=st.pins.includes(a.id);
+  return `<li class="row${p?' pk':a.gone?' gone':''}">
+    <span class="rk">${p?n:a.rank}</span>
+    <div class="nm"><b>${esc(a.zh)}</b><span class="en">${esc(a.en)}</span>
+      ${a.fx?`<p class="fx">${esc(a.fx)}</p>`:''}
+      ${tags.length?`<div class="tags">${tags.join('')}</div>`:''}</div>
+    <div class="meta"><span class="pill r-${a.r}">${RAR[a.r]}</span><span class="tier t-${a.t}">${a.t}</span><span class="pr">選取 <span class="num">${a.pr.toFixed(1)}%</span></span></div>
+    ${p?wrBar(p.cw,a.wr):wrBar(a.wr)}
+    <button class="pin" type="button" data-id="${a.id}" aria-pressed="${pinned}">${pinned?'已加入':'比較'}</button>
+  </li>`;
+}
+function render(){
+  const q=st.q.trim().toLowerCase();
+  const base=a=>(!q||a.zh.toLowerCase().includes(q)||a.en.toLowerCase().includes(q))&&
+    (!st.rar||a.r===st.rar)&&(!st.tier||a.t===st.tier)&&(!st.hide||!a.gone);
+  // 英雄首選不受定位篩選影響，依收益率排在最前
+  const picks=st.champ?A.filter(a=>pickOf(a)&&base(a)).sort((x,y)=>pickOf(y).g-pickOf(x).g):[];
+  let rest=A.filter(a=>!pickOf(a)&&base(a)&&(!st.role||a.roles.includes(st.role)||a.roles.includes('U')));
+  if(st.sort==='pr')rest=[...rest].sort((x,y)=>y.pr-x.pr);
+  const rows=picks.concat(rest);
+  $('#list').innerHTML=rows.length?rows.map((a,i)=>rowHTML(a,i+1)).join(''):'<li class="empty">沒有符合的增幅。試著清掉篩選，或改用英文名稱搜尋。</li>';
+  $('#count').textContent=`顯示 ${rows.length} / ${A.length}`;
+  const info=$('#champInfo');
+  if(st.champ){info.hidden=false;info.innerHTML=`<b>${esc(st.champ.zh)}</b> 平均勝率 <span class="num">${st.champ.w.toFixed(1)}%</span>。最前面 ${picks.length} 張是${esc(st.champ.zh)}拿了勝率提升最多的增幅，顯示的是該英雄專屬勝率；其餘沿用全體勝率。`}
+  else info.hidden=true;
+}
+function setChamp(v){
+  const k=v.trim();st.champ=CH[k]||CH[k.toLowerCase()]||null;
+  try{localStorage.setItem('champ',st.champ?st.champ.s:'')}catch(e){}
+  render();renderTray();
+}
+$('#champList').innerHTML=CHL.map(c=>`<option value="${esc(c.zh)}">${c.s}</option>`).join('');
+$('#champ').addEventListener('input',e=>setChamp(e.target.value));
+$('#champClr').onclick=()=>{$('#champ').value='';setChamp('')};
+function renderTray(){
+  const t=$('#tray');
+  if(!st.pins.length){t.hidden=true;return}
+  // 有選英雄時：英雄首選優先（依收益率），其餘依全體勝率
+  const sc=a=>{const p=pickOf(a);return p?1000+p.g:a.wr};
+  const ps=st.pins.map(i=>A[i]).sort((x,y)=>sc(y)-sc(x));
+  $('#trayIn').innerHTML=`<h3>三選一比較${st.champ?'（'+esc(st.champ.zh)+'）':''}</h3>`+ps.map((a,i)=>{const p=pickOf(a);
+    return `<span class="pick${i===0&&ps.length>1?' best':''}">${i===0&&ps.length>1?'<span class="first">建議</span>':''}<b>${esc(a.zh)}</b><span class="num">${(p?p.cw:a.wr).toFixed(1)}%</span><span class="small muted">${p?'首選 +'+p.g.toFixed(1)+'%':(st.champ?'全體':RAR[a.r])}</span></span>`}).join('')+
+    `<button class="clear" type="button" id="clr">清除</button>`;
+  t.hidden=false;
+  $('#clr').onclick=()=>{st.pins=[];renderTray();render()};
+}
+$('#list').addEventListener('click',e=>{
+  const b=e.target.closest('.pin');if(!b)return;
+  const id=+b.dataset.id,i=st.pins.indexOf(id);
+  if(i>=0)st.pins.splice(i,1);else{if(st.pins.length>=3)st.pins.shift();st.pins.push(id);
+    // 以搜尋找到卡片並加入後，清空搜尋，方便接著找下一張
+    if(st.q){st.q='';$('#q').value='';if(st.pins.length<3)$('#q').focus()}}
+  renderTray();render();
+});
+$('#q').addEventListener('input',e=>{st.q=e.target.value;render()});
+$('#sort').addEventListener('change',e=>{st.sort=e.target.value;render()});
+$('#hideGone').addEventListener('change',e=>{st.hide=e.target.checked;render()});
+
+// 心法頁：由資料直接算出
+const li=a=>`<li><span>${esc(a.zh)} <span class="small muted">${RAR[a.r]}</span></span><span class="num">${a.wr.toFixed(1)}% <span class="small muted">· 選取 ${a.pr.toFixed(1)}%</span></span></li>`;
+$('#gems').innerHTML=A.filter(a=>a.wr>=52&&a.pr<1).map(li).join('');
+$('#traps').innerHTML=A.filter(a=>a.pr>=2&&a.wr<48.5).sort((x,y)=>y.pr-x.pr).map(li).join('');
+$('#worst').innerHTML=A.slice(-10).reverse().map(li).join('');
+$('#gone').innerHTML=A.filter(a=>a.gone).map(a=>`<li><span>${esc(a.zh)}</span><span class="num">${a.wr.toFixed(1)}% <span class="small muted">· ${a.t} 級</span></span></li>`).join('');
+(()=>{const P=A.filter(a=>a.r==='P'),low=P.filter(a=>a.wr<48).length,D=A.filter(a=>a.t==='D'),dp=D.filter(a=>a.r==='P').length;
+ $('#ev-prism').textContent=`${P.length} 個稜鏡增幅中有 ${low} 個勝率低於 48%；D 級 ${D.length} 個裡有 ${dp} 個是稜鏡。`})();
+
+// 機率
+const ST=[['第 1 選',10.9,60.5,28.7],['第 2 選',29.3,44.2,26.5],['第 3 選',29.3,44.2,26.5],['第 4 選',29.2,44.2,26.5]];
+$('#stages').innerHTML=ST.map(s=>`<div class="stage"><span class="small">${s[0]}</span><div class="stack" role="img" aria-label="${s[0]}：白銀 ${s[1]}%、黃金 ${s[2]}%、稜鏡 ${s[3]}%"><span class="s-S" style="width:${s[1]}%">${s[1]}%</span><span class="s-G" style="width:${s[2]}%">${s[2]}%</span><span class="s-P" style="width:${s[3]}%">${s[3]}%</span></div></div>`).join('');
+
+// 4.0 新增幅（PBE，暫譯）
+const NEW=[
+['P','重磅一擊','+35% 暴擊傷害與 25% 額外物理攻擊；75% 攻速轉為暴擊傷害'],
+['P','死之舞','召喚師技能：向前閃現並進入不可被擊殺狀態，5 秒內須參與一次擊殺（助攻也算），否則死亡'],
+['P','彈跳蜜蜂','施放技能後下一次普攻彈跳至最近敵人；任務升級可得物理攻擊與額外彈跳'],
+['P','群體擁抱','以？？？治療或護盾一名隊友時，同時作用於另外兩名隊友'],
+['P','莫什怪獸','使用？？？時獲得生命與體型並緩速周圍敵人；參與擊殺可永久增強'],
+['P','事不過三','對英雄的每第三次攻擊造成真實傷害，並永久提高該傷害'],
+['G','裝甲衝擊','施放技能後下一次普攻造成範圍物理傷害，隨護甲提高'],
+['G','雙重加速','短時間內以兩個不同技能傷害英雄，獲得永久魔力並依最大魔力追加魔法傷害'],
+['G','後座力','？？？造成更高傷害，並將你向後擊退'],
+['G','升級：風暴狂湧','風暴狂湧改為在目標區域引爆並標記敵人；獲得 500 金幣'],
+['G','撓癢怪獸','物理攻擊轉為攻速，普攻附加魔法傷害'],
+['G','汲取魔力','每 20 秒下一次攻擊追加物理傷害並回血，施放技能可縮短冷卻'],
+['G','魅惑蝶群','治療或護盾隊友累積蝴蝶，滿 7 隻後傷害英雄時一次釋放'],
+['G','奧術公理','傷害英雄後不久參與擊殺，返還部分大絕冷卻'],
+['G','寶石手鐲','？？？可以暴擊，並 +25% 暴擊率'],
+['G','救贖','生命跌破 50% 時對周圍敵人造成魔法傷害並擊退，同時治療大範圍內隊友'],
+['G','緋紅鈷藍','被？？？傷害的英雄會被標記，攻擊標記目標造成魔法傷害並縮短該技能冷卻'],
+['G','徹底擊潰','普攻與技能追加魔法傷害並疊層，滿層時下一擊高傷害並回血'],
+['G','罪惡快感','召喚師技能：騎乘火箭，撞到敵人、建築或牆壁後爆炸'],
+['G','王冠之重','參與擊殺提高物攻、魔攻與攻速，但大幅降低跑速；死亡後效果降低'],
+['G','命運之武','第一件傳說裝備依你的參與擊殺數提高能力值'],
+['G','重擊／猛擊／力量','強化？？？：+20 技能急速、+10% 傷害、+10% 治療與護盾'],
+['S','藍色屏障','將消耗的部分魔力轉為暫時護盾'],
+['S','音障','你的護盾提供隨時間衰減的跑速，並使目標可穿越單位'],
+['S','靈能湧動','施放？？？後短暫獲得額外攻速'],
+['S','巫妖之腦','+30 魔法攻擊'],
+['S','孤膽戰士','依附近敵方英雄數獲得攻速、護甲與魔抗'],
+['S','大絕循環','+50 大絕技能急速'],
+['S','無藍無憂','裝備提供的魔力轉為魔法攻擊，並 +15% 魔法攻擊'],
+['S','遠程狙擊','在接近最大射程處攻擊時追加物理傷害'],
+['S','果實化','參與擊殺後，被擊殺的英雄爆出可回血回魔的果實'],
+['S','溺亡者的饋贈','額外生命轉為物理穿透'],
+['S','重金屬','額外魔攻轉魔抗、額外物攻轉護甲。開發者已表示此為遺留項目，不會上線']];
+$('#newtab tbody').innerHTML=NEW.map(n=>`<tr><td><span class="pill r-${n[0]}" style="display:inline-block">${RAR[n[0]]}</span></td><td style="white-space:nowrap"><b>${n[1]}</b></td><td>${n[2]}</td></tr>`).join('');
+
+// 分頁
+const TABS=['lookup','tips','odds','next'];
+function show(t,push){
+  if(!TABS.includes(t))t='lookup';
+  TABS.forEach(k=>{$('#sec-'+k).hidden=k!==t;$('#tab-'+k).setAttribute('aria-selected',String(k===t))});
+  if(push){try{history.replaceState(null,'','#'+t)}catch(e){}}
+}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>show(b.dataset.t,true));
+window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+show(location.hash.slice(1));
+$('#filt').open=window.matchMedia('(min-width:701px)').matches;
+try{const s=localStorage.getItem('champ');if(s&&CH[s]){st.champ=CH[s];$('#champ').value=CH[s].zh}}catch(e){}
+render();
+</script>
+</body>
+</html>
