@@ -6,22 +6,22 @@ LoL「隨機單中：海克斯大亂鬥」（ARAM Mayhem）的選卡參考頁。
 
 ## 功能
 
-- **選卡查詢**：現行 3.0 的 211 個增幅，依實戰勝率排序；可依定位、稀有度、梯隊篩選。
+- **選卡查詢**：4.0 的 226 個增幅，依實戰勝率排序；可依定位、稀有度、梯隊篩選。
 - **英雄相性**：選擇英雄後，該英雄收益最高的 12 張排到最前面，顯示該英雄專屬勝率。
 - **三選一比較**：把出現的三張加入比較，底部列出建議順序。
 - **選卡心法**：由資料歸納的七個判斷原則，以及冷門高勝率、熱門低勝率清單。
 - **稀有度機率**：四選各階段的白銀／黃金／稜鏡機率。
-- **4.0 前瞻**：樂團嘉賓、測試服新增幅、預計移除的增幅。
+- **4.0 改動**：新增增幅的實戰勝率、已移除的增幅、樂團嘉賓。
 
 ## 資料
 
 | 內容 | 來源 | 版本 |
 |---|---|---|
-| 增幅勝率、選取率、梯隊、繁中名稱 | [ARAMKit 海克斯排行](https://aramkit.com/zh-TW/augments) | v16.20，2026-10-12，1,329 萬場 |
-| 各英雄前 12 名增幅 | [ARAMKit 英雄頁](https://aramkit.com/zh-TW/champions) | 2026-10-13 擷取 |
-| 稀有度機率 | [ARAMKit 海克斯機率](https://aramkit.com/zh-TW/augment-rarity) | v16.20 |
-| 稀有度與效果說明 | [Mobalytics](https://mobalytics.gg/lol/guides/aram-mayhem-tier-list) | 2026-07-20 |
-| 4.0 內容 | [ARAM Mayhem](https://arammayhem.com/zh-tw/articles/aram-mayhem-4-0)、[騰訊新聞](https://news.qq.com/rain/a/20261007A03EU400) | PBE，2026-10-08 |
+| 增幅勝率、選取率、梯隊、稀有度、繁中名稱 | [ARAMKit 海克斯排行](https://aramkit.com/zh-TW/augments) | v16.21，2026-10-27，2,476 萬場 |
+| 各英雄前 12 名增幅 | [ARAMKit 英雄頁](https://aramkit.com/zh-TW/champions) | 2026-10-28 擷取 |
+| 稀有度機率 | [ARAMKit 海克斯機率](https://aramkit.com/zh-TW/augment-rarity) | v16.21 |
+| 效果說明 | [Mobalytics](https://mobalytics.gg/lol/guides/aram-mayhem-tier-list)、ARAMKit 增幅頁 | 2026-10-28 |
+| 樂團嘉賓 | [ARAM Mayhem](https://arammayhem.com/zh-tw/articles/aram-mayhem-4-0) | PBE，2026-10-08 |
 
 `data/` 內為擷取後的原始資料：
 
@@ -30,13 +30,17 @@ LoL「隨機單中：海克斯大亂鬥」（ARAM Mayhem）的選卡參考頁。
 
 `index.html` 內嵌的是同一份資料的精簡版（`RAW` 為增幅清單，`CHRAW` 為英雄資料，增幅以清單序號表示）。
 
+## 封存版本
+
+- [`archive/3.0/`](archive/3.0/)：3.0（v16.20）最終版，2026-10-28 封存，內容不再更新。
+
 ## 已知限制
 
 - 每位英雄只有前 12 名增幅；其餘沿用全體勝率。
 - 英雄資料來源未提供樣本數，冷門英雄的數字波動較大。
-- 約 25 個增幅查不到可靠的效果說明，稀有度標為「未確認」。
+- 9 個增幅樣本不足，未列入。
 - 「適用定位」為依效果自行歸類，非官方分類。
-- 4.0 預計隨 26.21 上線（2026-10-21，太平洋時間），上線後所有勝率資料需重新擷取。
+- 樂團嘉賓的名稱與效果整理自測試服，可能與正式服用語不同。
 
 ## 聲明
 
